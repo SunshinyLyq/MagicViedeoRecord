@@ -15,7 +15,8 @@ import lyq.com.magicvideorecord.utils.CameraHelper;
 
 /**
  * @date 2018/12/14.
- * @description 开启摄像头，预览数据,初始化opengl
+ * @description 开启摄像头，
+ * 预览数据,初始化opengl
  */
 public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
 
@@ -50,7 +51,7 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
         mCameraHelper = new CameraHelper(Camera.CameraInfo.CAMERA_FACING_FRONT, getContext());
 
         /**初始化相机绘画类*/
-        mCameraRender = new CameraRender(getResources());
+        mCameraRender = new CameraRender(mContext);
     }
 
     /**

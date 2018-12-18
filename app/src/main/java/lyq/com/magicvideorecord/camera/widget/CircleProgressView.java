@@ -14,9 +14,9 @@ import android.widget.ImageView;
 import lyq.com.magicvideorecord.utils.DensityUtils;
 
 /**
- * @author liyuqing
+ * @author sunshiny
  * @date 2018/12/14.
- * @description 写自己的代码，让别人说去吧
+ * @description
  */
 public class CircleProgressView extends android.support.v7.widget.AppCompatImageView{
 

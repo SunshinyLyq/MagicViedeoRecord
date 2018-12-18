@@ -8,7 +8,7 @@ import android.view.WindowManager;
 /**
  * @author liyuqing
  * @date 2018/12/13.
- * @description 写自己的代码，让别人说去吧
+ * @description
  */
 public class DensityUtils {
 

@@ -12,9 +12,9 @@ import java.util.List;
 import lyq.com.magicvideorecord.utils.DensityUtils;
 
 /**
- * @author liyuqing
+ * @author sunshiny
  * @date 2018/12/14.
- * @description 写自己的代码，让别人说去吧
+ * @description
  */
 public class CameraHelper implements Camera.PreviewCallback {
 

@@ -1,5 +1,6 @@
 package lyq.com.magicvideorecord.camera.render;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;
@@ -9,8 +10,11 @@ import android.opengl.GLSurfaceView;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import lyq.com.magicvideorecord.camera.fliter.ScreenFilter;
+import lyq.com.magicvideorecord.utils.OpenGLUtils;
+
 /**
- * @author liyuqing
+ * @author sunshiny
  * @date 2018/12/14.
  * @description 
  * 主要用于管理各种滤镜，画面旋转，视频编码录制等
@@ -18,13 +22,16 @@ import javax.microedition.khronos.opengles.GL10;
 public class CameraRender implements GLSurfaceView.Renderer{
 
 
+    private Context context;
     private SurfaceTexture mSurfaceTxure;//获取摄像头数据传递过来的帧数据内容
 
-    private int[] mTextures = new int[1];
     private int[] fFrame = new int[1];
     private int[] fTexture =new int[1];
     private float[] mtx = new float[16]; // 变换矩阵
 
+    /**显示画面的filter*/
+    private ScreenFilter screenFilter;
+    private int textureID;
     /**
      * 预览数据的宽高
      */
@@ -35,32 +42,20 @@ public class CameraRender implements GLSurfaceView.Renderer{
     private int width = 0, height = 0;
 
 
-    public CameraRender(Resources resources) {
+    public CameraRender(Context context) {
+        this.context =context;
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         //创建纹理id
-        createTextureID();
-        mSurfaceTxure = new SurfaceTexture(mTextures[0]);
+        textureID = OpenGLUtils.createTextureID();
+        mSurfaceTxure = new SurfaceTexture(textureID);
+
+        screenFilter = new ScreenFilter(context);
+        screenFilter.setTextureId(textureID);
     }
 
-    private void createTextureID() {
-        GLES20.glGenTextures(mTextures.length, mTextures, 0);
-        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mTextures[0]);
-        //设置缩小过滤为使用纹理中坐标最接近的一个像素颜色作为需要绘制的像素颜色
-        GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,
-                GL10.GL_TEXTURE_MIN_FILTER, GL10.GL_LINEAR);
-        //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
-        GLES20.glTexParameterf(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,
-                GL10.GL_TEXTURE_MAG_FILTER, GL10.GL_LINEAR);
-        //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
-        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,
-                GL10.GL_TEXTURE_WRAP_S, GL10.GL_CLAMP_TO_EDGE);
-        //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
-        GLES20.glTexParameteri(GLES11Ext.GL_TEXTURE_EXTERNAL_OES,
-                GL10.GL_TEXTURE_WRAP_T, GL10.GL_CLAMP_TO_EDGE);
-    }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
@@ -75,12 +70,18 @@ public class CameraRender implements GLSurfaceView.Renderer{
         GLES20.glGenTextures(fFrame.length,fFrame,0);
         GLES20.glGenTextures(fTexture.length,fTexture,0);
 
+        OpenGLUtils.getShowMatrix(mtx,mPreviewWidth,mPreviewHeight,width,height);
+        screenFilter.setMatrix(mtx);
 
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
 
+        mSurfaceTxure.updateTexImage();
+        mSurfaceTxure.getTransformMatrix(mtx);
+        GLES20.glViewport(0,0,width,height);
+        screenFilter.draw();
     }
 
     /**
