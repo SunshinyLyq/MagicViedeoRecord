@@ -1,11 +1,15 @@
 package lyq.com.magicvideorecord.camera.fliter;
 
 import android.content.Context;
+import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+import android.util.Log;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.Arrays;
+
 import lyq.com.magicvideorecord.utils.OpenGLUtils;
 
 /**
@@ -14,6 +18,14 @@ import lyq.com.magicvideorecord.utils.OpenGLUtils;
  * @description
  */
 public abstract class AbstractFilter {
+
+    private static final String TAG = "AbstractFilter";
+
+    /**
+     * 单位矩阵
+     */
+    public static final float[] OM= OpenGLUtils.getOriginalMatrix();
+
     /**
      * 顶点坐标buffer
      */
@@ -47,7 +59,7 @@ public abstract class AbstractFilter {
      */
     protected int mVMatrix;
 
-    private float[] matrix;
+    private float[] matrix= Arrays.copyOf(OM,16);
 
     /**
      * 纹理
@@ -62,19 +74,24 @@ public abstract class AbstractFilter {
      * 顶点坐标
      */
     float[] VERTEX = {
-            -1.0f, -1.0f,
-            1.0f, -1.0f,
             -1.0f, 1.0f,
-            1.0f, 1.0f
+            -1.0f, -1.0f,
+            1.0f, 1.0f,
+            1.0f, -1.0f,
     };
     /**
      * 纹理坐标
      */
     float[] TEXTURE = {
+//            0.0f, 0.0f,
+//            0.0f, 1.0f,
+//            1.0f, 0.0f,
+//            1.0f, 1.0f,
+
             0.0f, 1.0f,
             1.0f, 1.0f,
             0.0f, 0.0f,
-            1.0f, 0.0f
+            1.0f, 0.0f,
     };
 
     public AbstractFilter(Context context, int vertexShaderId, int fragmentShaderId) {
@@ -99,7 +116,7 @@ public abstract class AbstractFilter {
 
     protected abstract void onSizeChanged(int width, int height);
 
-    public void draw(){
+    public void draw() {
         onClear();
         onUseProgram();
         setExpandData();
@@ -112,10 +129,10 @@ public abstract class AbstractFilter {
      */
     private void onDraw() {
         GLES20.glEnableVertexAttribArray(mVPosition);
-        GLES20.glVertexAttribPointer(mVPosition,2,GLES20.GL_FLOAT,false,0,mGLVertextBuffer);
+        GLES20.glVertexAttribPointer(mVPosition, 2, GLES20.GL_FLOAT, false, 0, mGLVertextBuffer);
         GLES20.glEnableVertexAttribArray(mVCoord);
-        GLES20.glVertexAttribPointer(mVCoord,2,GLES20.GL_FLOAT,false,0,mGLTextureBuffer);
-        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP,0,4);
+        GLES20.glVertexAttribPointer(mVCoord, 2, GLES20.GL_FLOAT, false, 0, mGLTextureBuffer);
+        GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
         GLES20.glDisableVertexAttribArray(mVPosition);
         GLES20.glDisableVertexAttribArray(mVCoord);
     }
@@ -125,7 +142,7 @@ public abstract class AbstractFilter {
      */
     private void onBindTexture() {
         GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
-        GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, textureId);
+        GLES20.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, textureId);
         GLES20.glUniform1i(mVTexture, 0);
     }
 
@@ -135,7 +152,7 @@ public abstract class AbstractFilter {
      * 额外扩展的采样器，需要传入对应的变换矩阵，才能正确的采样
      */
     private void setExpandData() {
-        GLES20.glUniformMatrix4fv(mVMatrix,1,false,matrix,0);
+        GLES20.glUniformMatrix4fv(mVMatrix, 1, false, matrix, 0);
     }
 
     /**
@@ -150,7 +167,7 @@ public abstract class AbstractFilter {
      */
     private void onClear() {
         //清理成黑色
-        GLES20.glClearColor(0,0,0,0);
+        GLES20.glClearColor(0, 0, 0, 0);
         GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
     }
 
@@ -165,14 +182,12 @@ public abstract class AbstractFilter {
         mGLVertextBuffer = ByteBuffer.allocateDirect(4 * 2 * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer();
-        mGLVertextBuffer.clear();
         mGLVertextBuffer.put(VERTEX);
         mGLVertextBuffer.position(0);
 
         mGLTextureBuffer = ByteBuffer.allocateDirect(4 * 2 * 4)
                 .order(ByteOrder.nativeOrder())
                 .asFloatBuffer();
-        mGLTextureBuffer.clear();
         mGLTextureBuffer.put(TEXTURE);
         mGLTextureBuffer.position(0);
     }
@@ -180,15 +195,15 @@ public abstract class AbstractFilter {
     /**
      * 创建GL程序以及初始化变量
      */
-    protected void createProgram(Context context){
-        String vertextShader = OpenGLUtils.readRawTextFile(context,mVertextShaderId);
-        String fragmentShader = OpenGLUtils.readRawTextFile(context,mFragmentShaderId);
-        mGLProgramId = OpenGLUtils.loadProgram(vertextShader,fragmentShader);
+    protected void createProgram(Context context) {
+        String vertextShader = OpenGLUtils.readRawTextFile(context, mVertextShaderId);
+        String fragmentShader = OpenGLUtils.readRawTextFile(context, mFragmentShaderId);
+        mGLProgramId = OpenGLUtils.loadProgram(vertextShader, fragmentShader);
         //获取着色器中变量
-        mVPosition=GLES20.glGetAttribLocation(mGLProgramId,"vPosition");
-        mVCoord= GLES20.glGetAttribLocation(mGLProgramId,"vCoord");
-        mVMatrix = GLES20.glGetUniformLocation(mGLProgramId,"vMatrix");
-        mVTexture=GLES20.glGetUniformLocation(mGLProgramId,"vTexture");
+        mVPosition = GLES20.glGetAttribLocation(mGLProgramId, "vPosition");
+        mVCoord = GLES20.glGetAttribLocation(mGLProgramId, "vCoord");
+        mVMatrix = GLES20.glGetUniformLocation(mGLProgramId, "vMatrix");
+        mVTexture = GLES20.glGetUniformLocation(mGLProgramId, "vTexture");
     }
 
 }

@@ -1,4 +1,4 @@
-
+#extension GL_OES_EGL_image_external : require
 
 precision mediump float;
 
@@ -6,7 +6,7 @@ precision mediump float;
 varying vec2 aCoord;
 
 //采样器,因为SurfaceTexture的特殊性，所以需要用这个采样器
-uniform sampler2D vTexture;
+uniform samplerExternalOES vTexture;
 
 void main(){
 

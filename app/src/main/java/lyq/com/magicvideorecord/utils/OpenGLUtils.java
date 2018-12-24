@@ -68,8 +68,8 @@ public class OpenGLUtils {
             int[] linkStatus = new int[1];
             GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, linkStatus, 0);
             if (linkStatus[0] != GLES20.GL_TRUE) {
-                GLES20.glDeleteProgram(program);
-                program = 0;
+//                GLES20.glDeleteProgram(program);
+//                program = 0;
                 throw new IllegalStateException("load program:" + GLES20.glGetProgramInfoLog(program));
             }
         }
@@ -92,8 +92,8 @@ public class OpenGLUtils {
             GLES20.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, status, 0);
             if (status[0] != GLES20.GL_TRUE) {
                 //失败
-                GLES20.glDeleteShader(shader);
-                shader = 0;
+//                GLES20.glDeleteShader(shader);
+//                shader = 0;
                 throw new IllegalStateException("load shader:" + GLES20.glGetShaderInfoLog(shader));
             }
         }
@@ -140,5 +140,14 @@ public class OpenGLUtils {
             Matrix.setLookAtM(camera,0,0,0,1,0,0,0,0,1,0);
             Matrix.multiplyMM(matrix,0,projection,0,camera,0);
         }
+    }
+
+    public static float[] getOriginalMatrix(){
+        return new float[]{
+                1,0,0,0,
+                0,1,0,0,
+                0,0,1,0,
+                0,0,0,1
+        };
     }
 }

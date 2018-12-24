@@ -11,7 +11,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import lyq.com.magicvideorecord.camera.render.CameraRender;
-import lyq.com.magicvideorecord.utils.CameraHelper;
+import lyq.com.magicvideorecord.utils.camera.CameraHelper;
 
 /**
  * @date 2018/12/14.
@@ -48,7 +48,7 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
         setCameraDistance(100);//设置相机距离
 
         /**初始化相机管理类*/
-        mCameraHelper = new CameraHelper(Camera.CameraInfo.CAMERA_FACING_FRONT, getContext());
+        mCameraHelper = new CameraHelper(Camera.CameraInfo.CAMERA_FACING_BACK, getContext());
 
         /**初始化相机绘画类*/
         mCameraRender = new CameraRender(mContext);

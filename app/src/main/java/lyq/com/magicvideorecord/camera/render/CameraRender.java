@@ -63,12 +63,12 @@ public class CameraRender implements GLSurfaceView.Renderer{
         this.height = height;
 
         //清除遗留的
-        GLES20.glDeleteFramebuffers(fFrame.length,fFrame,0);
-        GLES20.glDeleteTextures(fTexture.length,fTexture,0);
+//        GLES20.glDeleteFramebuffers(fFrame.length,fFrame,0);
+//        GLES20.glDeleteTextures(fTexture.length,fTexture,0);
 
         /**创建一个帧缓冲区对象*/
-        GLES20.glGenTextures(fFrame.length,fFrame,0);
-        GLES20.glGenTextures(fTexture.length,fTexture,0);
+//        GLES20.glGenTextures(fFrame.length,fFrame,0);
+//        GLES20.glGenTextures(fTexture.length,fTexture,0);
 
         OpenGLUtils.getShowMatrix(mtx,mPreviewWidth,mPreviewHeight,width,height);
         screenFilter.setMatrix(mtx);
@@ -77,10 +77,10 @@ public class CameraRender implements GLSurfaceView.Renderer{
 
     @Override
     public void onDrawFrame(GL10 gl) {
-
         mSurfaceTxure.updateTexImage();
         mSurfaceTxure.getTransformMatrix(mtx);
         GLES20.glViewport(0,0,width,height);
+//        screenFilter.setMatrix(mtx);
         screenFilter.draw();
     }
 

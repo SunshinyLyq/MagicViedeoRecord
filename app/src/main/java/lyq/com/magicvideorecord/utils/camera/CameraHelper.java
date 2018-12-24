@@ -1,20 +1,23 @@
-package lyq.com.magicvideorecord.utils;
+package lyq.com.magicvideorecord.utils.camera;
 
 import android.content.Context;
 import android.graphics.ImageFormat;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import lyq.com.magicvideorecord.config.Constants;
 import lyq.com.magicvideorecord.utils.DensityUtils;
 
 /**
  * @author sunshiny
  * @date 2018/12/14.
- * @description
+ * @description 相机的管理类
  */
 public class CameraHelper implements Camera.PreviewCallback {
 
@@ -29,12 +32,12 @@ public class CameraHelper implements Camera.PreviewCallback {
     private Camera.PreviewCallback mPreviewCallback;
     private SurfaceTexture mSurfaceTexture;
 
-    private Point mPreSize ;
+    private Point mPreSize;
 
 
-    public CameraHelper(int cameraId,Context context) {
+    public CameraHelper(int cameraId, Context context) {
         mCameraId = cameraId;
-        this.context=context;
+        this.context = context;
     }
 
     public void switchCamera() {
@@ -71,14 +74,14 @@ public class CameraHelper implements Camera.PreviewCallback {
         Camera.Parameters parameters = mCamera.getParameters();
         //设置预览数据格式为nv21
         parameters.setPreviewFormat(ImageFormat.NV21);
-        preSize=getCloselyPreSize(true, DensityUtils.getScreenWidth(context),DensityUtils.getScreenHeight(context),parameters.getSupportedPreviewSizes());
+        preSize = getCloselyPreSize(true, DensityUtils.getScreenWidth(context), DensityUtils.getScreenHeight(context), parameters.getSupportedPreviewSizes());
         //这是摄像头宽、高
         parameters.setPreviewSize(preSize.width, preSize.height);
         // 设置摄像头 图像传感器的角度、方向
         mCamera.setParameters(parameters);
 
-        Camera.Size pre=parameters.getPreviewSize();
-        mPreSize=new Point(pre.height,pre.width);
+        Camera.Size pre = parameters.getPreviewSize();
+        mPreSize = new Point(pre.height, pre.width);
     }
 
     public void startPreview(SurfaceTexture surfaceTexture) {
@@ -115,6 +118,63 @@ public class CameraHelper implements Camera.PreviewCallback {
         camera.addCallbackBuffer(buffer);
     }
 
+    /**
+     * 手动聚焦
+     *
+     * @param point    触屏坐标，必须传入转换后的坐标
+     * @param callback
+     */
+    public void onFocus(Point point, Camera.AutoFocusCallback callback) {
+        Camera.Parameters parameters = mCamera.getParameters();
+
+        boolean supportFocus = true;
+        boolean supportMetering = true;
+
+        //不支持设置自定义聚焦，则使用自动聚焦
+        if (parameters.getMaxNumFocusAreas() <= 0) {
+            supportFocus = false;
+        }
+        if (parameters.getMaxNumMeteringAreas() <= 0) {
+            supportMetering = false;
+        }
+
+        List<Camera.Area> areas = new ArrayList<>();
+        List<Camera.Area> areas1 = new ArrayList<>();
+
+        //再次进行转换
+        point.x = (int) (((float) point.x) / Constants.screenWidth * 2000 - 1000);
+        point.y = (int) (((float) point.y) / Constants.screenHeight * 2000 - 1000);
+
+
+        int left = point.x - 300;
+        int top = point.y - 300;
+        int right = point.x + 300;
+        int bottom = point.y + 300;
+
+        left = left < -1000 ? -1000 : left;
+        top = top < -1000 ? -1000 : top;
+        right = right > 1000 ? 1000 : right;
+        bottom = bottom > 1000 ? 1000 : bottom;
+
+        areas.add(new Camera.Area(new Rect(left,top,right,bottom),100));
+        areas1.add(new Camera.Area(new Rect(left,top,right,bottom),100));
+
+        if (supportFocus){
+            parameters.setFocusAreas(areas);
+        }
+        if (supportMetering){
+            parameters.setMeteringAreas(areas1);
+        }
+
+        try {
+            mCamera.setParameters(parameters);
+            mCamera.autoFocus(callback);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
 
     /**
      * 获取最接近的尺寸
@@ -148,16 +208,16 @@ public class CameraHelper implements Camera.PreviewCallback {
 
         //没有的话，就去找宽高比例最接近的那个尺寸
 //        float reqRatio =(float)reqTmpWidth/(float)reqTmpHeight;
-        float reqRatio=1.778f;
-        float curRatio,deltaRatio;
-        float deltaRatioMin  = Float.MAX_VALUE;
+        float reqRatio = 1.778f;
+        float curRatio, deltaRatio;
+        float deltaRatioMin = Float.MAX_VALUE;
 
-        Camera.Size retSize=null;
+        Camera.Size retSize = null;
 
         for (Camera.Size size : preSizeList) {
-            curRatio = (float)size.width / (float) size.height;
+            curRatio = (float) size.width / (float) size.height;
             deltaRatio = Math.abs(reqRatio - curRatio);
-            if (deltaRatio < deltaRatioMin){
+            if (deltaRatio < deltaRatioMin) {
                 deltaRatioMin = deltaRatio;
                 retSize = size;
             }
