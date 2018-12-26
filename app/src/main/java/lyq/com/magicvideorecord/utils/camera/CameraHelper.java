@@ -138,10 +138,11 @@ public class CameraHelper implements Camera.PreviewCallback {
             supportMetering = false;
         }
 
+        //对焦和测光区域
         List<Camera.Area> areas = new ArrayList<>();
         List<Camera.Area> areas1 = new ArrayList<>();
 
-        //再次进行转换
+        //把屏幕坐标，转换成Camera.Area中的坐标
         point.x = (int) (((float) point.x) / Constants.screenWidth * 2000 - 1000);
         point.y = (int) (((float) point.y) / Constants.screenHeight * 2000 - 1000);
 
@@ -150,6 +151,7 @@ public class CameraHelper implements Camera.PreviewCallback {
         int top = point.y - 300;
         int right = point.x + 300;
         int bottom = point.y + 300;
+
 
         left = left < -1000 ? -1000 : left;
         top = top < -1000 ? -1000 : top;

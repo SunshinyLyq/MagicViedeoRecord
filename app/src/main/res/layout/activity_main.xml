@@ -23,11 +23,11 @@
             android:layout_alignParentRight="true"
             android:orientation="vertical"
             android:layout_margin="20dp">
-            <ImageView
+            <ImageButton
                 android:id="@+id/btn_camera_switch"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:src="@drawable/selector_rewardcamera"
+                android:background="@drawable/selector_rewardcamera"
                 android:layout_alignParentRight="true"/>
         </LinearLayout>
 
@@ -49,7 +49,7 @@
                 android:src="@drawable/btn_camera_beauty"/>
 
             <lyq.com.magicvideorecord.camera.widget.CircleProgressView
-                android:id="@+id/mCapture"
+                android:id="@+id/capture"
                 android:background="@drawable/bt_capture"
                 android:layout_width="88dp"
                 android:layout_height="88dp"
@@ -64,6 +64,15 @@
 
         </LinearLayout>
 
+        <lyq.com.magicvideorecord.camera.widget.FocusImageView
+            android:id="@+id/focusImageView"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:visibility="invisible"
+            app:focus_fail_id="@mipmap/focus_focus_failed"
+            app:focus_focusing_id="@mipmap/focus_focusing"
+            app:focus_success_id="@mipmap/focus_focused"
+           />
 
     </RelativeLayout>
 

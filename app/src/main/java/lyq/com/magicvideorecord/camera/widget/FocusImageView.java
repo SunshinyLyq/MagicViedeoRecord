@@ -6,6 +6,8 @@ import android.graphics.Point;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.RelativeLayout;
@@ -34,7 +36,6 @@ public class FocusImageView extends android.support.v7.widget.AppCompatImageView
         super(context, attrs);
 
         mAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.focusview_show);
-        setVisibility(GONE);
         mHandler = new Handler();
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FocusImageView);
@@ -51,14 +52,18 @@ public class FocusImageView extends android.support.v7.widget.AppCompatImageView
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
         layoutParams.topMargin = point.y - getHeight() / 2;
         layoutParams.leftMargin = point.x - getWidth() / 2;
+
+        Log.e(TAG, "startFocus: 右"+layoutParams.topMargin );
+        Log.e(TAG, "startFocus: 左"+layoutParams.leftMargin );
+
         setLayoutParams(layoutParams);
-        setVisibility(VISIBLE);
+        setVisibility(View.VISIBLE);
         setImageResource(mFocusImg);
         startAnimation(mAnimation);
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setVisibility(GONE);
+                setVisibility(View.GONE);
             }
         }, 3500);
 
@@ -73,7 +78,7 @@ public class FocusImageView extends android.support.v7.widget.AppCompatImageView
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setVisibility(GONE);
+                setVisibility(View.GONE);
             }
         }, 1000);
     }
@@ -84,7 +89,7 @@ public class FocusImageView extends android.support.v7.widget.AppCompatImageView
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                setVisibility(GONE);
+                setVisibility(View.GONE);
             }
         }, 1000);
     }

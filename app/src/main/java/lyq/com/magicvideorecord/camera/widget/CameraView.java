@@ -11,6 +11,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import lyq.com.magicvideorecord.camera.render.CameraRender;
+import lyq.com.magicvideorecord.config.Constants;
 import lyq.com.magicvideorecord.utils.camera.CameraHelper;
 
 /**
@@ -65,7 +66,7 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
         dataWidth = previewSize.x;
         dataHeight = previewSize.y;
 
-        SurfaceTexture surfaceTexture=mCameraRender.getSurfaceTxure();
+        SurfaceTexture surfaceTexture = mCameraRender.getSurfaceTxure();
         surfaceTexture.setOnFrameAvailableListener(this);
         mCameraHelper.startPreview(surfaceTexture);//设置预览数据
     }
@@ -78,24 +79,31 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
         mCameraHelper.switchCamera();
     }
 
+    public void onFocus(Point point,Camera.AutoFocusCallback callback) {
+        if (mCameraHelper.getCameraId() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+            return;
+        }
+        mCameraHelper.onFocus(point,callback);
+    }
+
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        mCameraRender.onSurfaceCreated(gl,config);
+        mCameraRender.onSurfaceCreated(gl, config);
         if (!isSetParam) {
             open();
             stickerInit();
         }
-        mCameraRender.setPreviewSize(dataWidth,dataHeight);
+        mCameraRender.setPreviewSize(dataWidth, dataHeight);
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        mCameraRender.onSurfaceChanged(gl,width,height);
+        mCameraRender.onSurfaceChanged(gl, width, height);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        if (isSetParam){
+        if (isSetParam) {
             mCameraRender.onDrawFrame(gl);
         }
 
@@ -108,7 +116,7 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
     public void onResume() {
         super.onResume();
 
-        if (isSetParam){
+        if (isSetParam) {
             open();
         }
     }
