@@ -21,24 +21,98 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:orientation="vertical"
-            android:layout_margin="20dp">
+            android:layout_margin="20dp"
+            android:orientation="vertical">
+
             <ImageButton
                 android:id="@+id/btn_camera_switch"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:background="@drawable/selector_rewardcamera"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true"
+                android:background="@drawable/selector_rewardcamera" />
+
+            <ImageButton
+                android:id="@+id/btn_speed"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:background="@mipmap/time" />
+
         </LinearLayout>
 
 
+        <RadioGroup
+            android:id="@+id/rg_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_above="@id/ll_record"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/record_speed_background"
+            android:orientation="horizontal"
+            android:visibility="gone">
+
+            <RadioButton
+                android:id="@+id/rb_extra_slow"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/record_speed_button_background"
+                android:button="@null"
+                android:gravity="center"
+                android:text="极慢"
+                android:textColor="@drawable/record_speed_button_text" />
+
+            <RadioButton
+                android:id="@+id/rb_slow"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/record_speed_button_background"
+                android:button="@null"
+                android:gravity="center"
+                android:text="慢"
+                android:textColor="@drawable/record_speed_button_text" />
+
+            <RadioButton
+                android:id="@+id/rb_normal"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/record_speed_button_background"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:text="标准"
+                android:textColor="@drawable/record_speed_button_text" />
+
+            <RadioButton
+                android:id="@+id/rb_fast"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/record_speed_button_background"
+                android:button="@null"
+                android:gravity="center"
+                android:text="快"
+                android:textColor="@drawable/record_speed_button_text" />
+
+            <RadioButton
+                android:id="@+id/rb_extra_fast"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/record_speed_button_background"
+                android:button="@null"
+                android:gravity="center"
+                android:text="极快"
+                android:textColor="@drawable/record_speed_button_text" />
+        </RadioGroup>
 
         <LinearLayout
+            android:id="@+id/ll_record"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp">
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/btn_camera_beauty"
@@ -46,21 +120,22 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1.0"
                 android:scaleType="center"
-                android:src="@drawable/btn_camera_beauty"/>
+                android:src="@drawable/btn_camera_beauty" />
 
             <lyq.com.magicvideorecord.camera.widget.CircleProgressView
                 android:id="@+id/capture"
-                android:background="@drawable/bt_capture"
                 android:layout_width="88dp"
                 android:layout_height="88dp"
+                android:background="@drawable/bt_capture"
                 android:clickable="true" />
+
             <ImageView
                 android:id="@+id/btn_camera_filter"
                 android:layout_width="0dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1.0"
                 android:scaleType="center"
-                android:src="@drawable/btn_camera_filter"/>
+                android:src="@drawable/btn_camera_filter" />
 
         </LinearLayout>
 
@@ -71,8 +146,7 @@
             android:visibility="invisible"
             app:focus_fail_id="@mipmap/focus_focus_failed"
             app:focus_focusing_id="@mipmap/focus_focusing"
-            app:focus_success_id="@mipmap/focus_focused"
-           />
+            app:focus_success_id="@mipmap/focus_focused" />
 
     </RelativeLayout>
 

@@ -125,6 +125,14 @@ public class OpenGLUtils {
         return texture[0];
     }
 
+    /**
+     * 获取需要显示的矩阵
+     * @param matrix
+     * @param imgWidth
+     * @param imgHeight
+     * @param viewWidth
+     * @param viewHeight
+     */
     public static void getShowMatrix(float[] matrix,int imgWidth,int imgHeight,int viewWidth,int
             viewHeight){
         if(imgHeight>0&&imgWidth>0&&viewWidth>0&&viewHeight>0){
@@ -140,6 +148,20 @@ public class OpenGLUtils {
             Matrix.setLookAtM(camera,0,0,0,1,0,0,0,0,1,0);
             Matrix.multiplyMM(matrix,0,projection,0,camera,0);
         }
+    }
+
+    /**
+     * 上下翻转
+     * @param m
+     * @param x
+     * @param y
+     * @return
+     */
+    public static float[] flip(float[] m,boolean x,boolean y){
+        if(x||y){
+            Matrix.scaleM(m,0,x?-1:1,y?-1:1,1);
+        }
+        return m;
     }
 
     public static float[] getOriginalMatrix(){

@@ -7,6 +7,8 @@ import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
+import java.lang.invoke.MutableCallSite;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
@@ -28,7 +30,11 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
     private int dataHeight = 0;
 
     private boolean isSetParam = false;
+    private Speed mSpeed = Speed.MODE_NORMAL;
 
+    public enum Speed {
+        MODE_EXTRA_SLOW, MODE_SLOW, MODE_NORMAL, MODE_FAST, MODE_EXTRA_FAST
+    }
 
     public CameraView(Context context) {
         this(context, null);
@@ -76,9 +82,15 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
      * 切换摄像头
      */
     public void switchCamera() {
+//        mCameraRender.switchCamera();
         mCameraHelper.switchCamera();
     }
 
+    /**
+     * 摄像头聚焦
+     * @param point
+     * @param callback
+     */
     public void onFocus(Point point,Camera.AutoFocusCallback callback) {
         if (mCameraHelper.getCameraId() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
             return;
@@ -115,7 +127,6 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
     @Override
     public void onResume() {
         super.onResume();
-
         if (isSetParam) {
             open();
         }
@@ -138,5 +149,66 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         this.requestRender();
+    }
+
+    public void resume(final boolean auto) {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mCameraRender.onResume(auto);
+            }
+        });
+    }
+
+    public void pause(final boolean auto) {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mCameraRender.onPause(auto);
+            }
+        });
+    }
+
+    public void setSpeed(Speed speed) {
+        mSpeed = speed;
+    }
+
+    /**
+     * 开始录制
+     */
+    public void startRecord() {
+        float speed = 1.f;
+        switch (mSpeed) {
+            case MODE_EXTRA_SLOW:
+                speed = 0.3f;
+                break;
+            case MODE_SLOW:
+                speed = 0.5f;
+                break;
+            case MODE_NORMAL:
+                speed = 1.f;
+                break;
+            case MODE_FAST:
+                speed = 1.5f;
+                break;
+            case MODE_EXTRA_FAST:
+                speed = 3.f;
+                break;
+        }
+        mCameraRender.setSpeed(speed);
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mCameraRender.startRecord();
+            }
+        });
+    }
+    public void stopRecord() {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mCameraRender.stopRecord();
+            }
+        });
     }
 }
