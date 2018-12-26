@@ -148,6 +148,14 @@
             app:focus_focusing_id="@mipmap/focus_focusing"
             app:focus_success_id="@mipmap/focus_focused" />
 
+        <ViewStub
+            android:id="@+id/filter_stub"
+            android:inflatedId="@+id/filter"
+            android:layout="@layout/filter_layout"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:layout_alignParentBottom="true"/>
+
     </RelativeLayout>
 
 </FrameLayout>

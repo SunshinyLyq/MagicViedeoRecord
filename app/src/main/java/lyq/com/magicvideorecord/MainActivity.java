@@ -6,21 +6,28 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewStub;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import lyq.com.magicvideorecord.camera.bean.FilterItem;
+import lyq.com.magicvideorecord.camera.bean.FilterType;
 import lyq.com.magicvideorecord.camera.widget.CameraView;
 import lyq.com.magicvideorecord.camera.widget.CircleProgressView;
+import lyq.com.magicvideorecord.camera.widget.FilterView;
 import lyq.com.magicvideorecord.camera.widget.FocusImageView;
 import lyq.com.magicvideorecord.config.Constants;
 import lyq.com.magicvideorecord.utils.camera.SensorControler;
 
-public class MainActivity extends AppCompatActivity implements SensorControler.CameraFocusListener, View.OnClickListener, View.OnTouchListener, RadioGroup.OnCheckedChangeListener {
+public class MainActivity extends AppCompatActivity implements SensorControler.CameraFocusListener, View.OnClickListener, View.OnTouchListener, RadioGroup.OnCheckedChangeListener, FilterView.FilterCallback {
 
     private static final String TAG = "MainActivity";
 
@@ -32,6 +39,8 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
     private ImageButton mSwitchCamera;
     private ImageButton mSpeed;
     private RadioGroup rg_speed;
+    private FilterView mFilterView;
+    private LinearLayout ll_record;
 
     private static final int MAX_RECORD_TIME = 15000;//最长录制15s
     private boolean recordFlag = false;//是都正在录制视频
@@ -43,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
 
     ExecutorService mExecutorService;//线程池
     private SensorControler mSensorControler;
+    private List<FilterItem> mFilters;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +63,9 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
         mSensorControler = SensorControler.getInstance();
         mSensorControler.setCameraFocusListener(this);
         initView();
+        initFilter();
     }
+
 
     private void initView() {
         mCameraView = findViewById(R.id.camera_view);
@@ -64,6 +76,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
         mSwitchCamera = findViewById(R.id.btn_camera_switch);
         mSpeed = findViewById(R.id.btn_speed);
         rg_speed = findViewById(R.id.rg_speed);
+        ll_record = findViewById(R.id.ll_record);
 
 
         mCameraView.setOnTouchListener(this);
@@ -88,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
                 break;
             //滤镜
             case R.id.btn_camera_filter:
+                filter();
                 break;
             //快慢速
             case R.id.btn_speed:
@@ -115,6 +129,56 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
 
     }
 
+    private void initFilter() {
+        mFilters = new LinkedList<>();
+        mFilters.add(new FilterItem(R.drawable.filter_default, "None", FilterType.NONE));
+        mFilters.add(new FilterItem(R.drawable.gray, "BlackWhite", FilterType.GRAY));
+        mFilters.add(new FilterItem(R.drawable.kuwahara, "Watercolour", FilterType.KUWAHARA));
+        mFilters.add(new FilterItem(R.drawable.snow, "Snow", FilterType.SNOW));
+        mFilters.add(new FilterItem(R.drawable.l1, "Lut_1", FilterType.LUT1));
+        mFilters.add(new FilterItem(R.drawable.cameo, "Cameo", FilterType.CAMEO));
+        mFilters.add(new FilterItem(R.drawable.l2, "Lut_2", FilterType.LUT2));
+        mFilters.add(new FilterItem(R.drawable.l3, "Lut_3", FilterType.LUT3));
+        mFilters.add(new FilterItem(R.drawable.l4, "Lut_4", FilterType.LUT4));
+        mFilters.add(new FilterItem(R.drawable.l5, "Lut_5", FilterType.LUT5));
+
+    }
+
+    private void filter() {
+        if (mFilterView == null) {
+            ViewStub stub = findViewById(R.id.filter_stub);
+            mFilterView = (FilterView) stub.inflate();
+            mFilterView.setVisibility(View.GONE);
+            mFilterView.setItemList(mFilters);
+            mFilterView.setFilterCallback(this);
+        }
+        ll_record.setVisibility(View.GONE);
+        mSwitchCamera.setVisibility(View.GONE);
+        mSpeed.setVisibility(View.GONE);
+        mFilterView.show();
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (ev.getAction() == MotionEvent.ACTION_DOWN) {
+            if (mFilterView != null && mFilterView.getVisibility() == View.VISIBLE
+                    && !checkInArea(mFilterView, ev)) {
+                mFilterView.hide();
+                ll_record.setVisibility(View.VISIBLE);
+                mSpeed.setVisibility(View.VISIBLE);
+                mSwitchCamera.setVisibility(View.VISIBLE);
+                return true;
+            }
+        }
+        return super.dispatchTouchEvent(ev);
+    }
+
+    private boolean checkInArea(View view, MotionEvent event) {
+        int[] loc = new int[2];
+        view.getLocationInWindow(loc);
+        return event.getRawY() > loc[1];
+
+    }
 
     Runnable recordRunnable = new Runnable() {
         @Override
@@ -232,6 +296,13 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
             case R.id.rb_extra_fast://极快
                 mCameraView.setSpeed(CameraView.Speed.MODE_EXTRA_FAST);
         }
+
+    }
+
+    // TODO: 2018/12/26 滤镜选择
+    @Override
+    public void onFilterSelect(FilterItem item) {
+
 
     }
 }
