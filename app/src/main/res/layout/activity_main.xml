@@ -156,6 +156,15 @@
             android:layout_height="130dp"
             android:layout_alignParentBottom="true"/>
 
+        <ViewStub
+            android:id="@+id/beauty_stub"
+            android:inflatedId="@+id/beauty"
+            android:layout="@layout/beauty_layout"
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_alignParentBottom="true"/>
+
+
     </RelativeLayout>
 
 </FrameLayout>

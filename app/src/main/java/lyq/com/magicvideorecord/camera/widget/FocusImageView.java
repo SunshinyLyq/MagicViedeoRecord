@@ -6,7 +6,6 @@ import android.graphics.Point;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -52,9 +51,6 @@ public class FocusImageView extends android.support.v7.widget.AppCompatImageView
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
         layoutParams.topMargin = point.y - getHeight() / 2;
         layoutParams.leftMargin = point.x - getWidth() / 2;
-
-        Log.e(TAG, "startFocus: 右"+layoutParams.topMargin );
-        Log.e(TAG, "startFocus: 左"+layoutParams.leftMargin );
 
         setLayoutParams(layoutParams);
         setVisibility(View.VISIBLE);

@@ -20,6 +20,7 @@ import java.util.concurrent.Executors;
 
 import lyq.com.magicvideorecord.camera.bean.FilterItem;
 import lyq.com.magicvideorecord.camera.bean.FilterType;
+import lyq.com.magicvideorecord.camera.widget.BeautyView;
 import lyq.com.magicvideorecord.camera.widget.CameraView;
 import lyq.com.magicvideorecord.camera.widget.CircleProgressView;
 import lyq.com.magicvideorecord.camera.widget.FilterView;
@@ -27,7 +28,7 @@ import lyq.com.magicvideorecord.camera.widget.FocusImageView;
 import lyq.com.magicvideorecord.config.Constants;
 import lyq.com.magicvideorecord.utils.camera.SensorControler;
 
-public class MainActivity extends AppCompatActivity implements SensorControler.CameraFocusListener, View.OnClickListener, View.OnTouchListener, RadioGroup.OnCheckedChangeListener, FilterView.FilterCallback {
+public class MainActivity extends AppCompatActivity implements SensorControler.CameraFocusListener, View.OnClickListener, View.OnTouchListener, RadioGroup.OnCheckedChangeListener, FilterView.FilterCallback, BeautyView.onBeautyChangeCallback {
 
     private static final String TAG = "MainActivity";
 
@@ -40,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
     private ImageButton mSpeed;
     private RadioGroup rg_speed;
     private FilterView mFilterView;
+    private BeautyView mBeautyView;
     private LinearLayout ll_record;
 
     private static final int MAX_RECORD_TIME = 15000;//最长录制15s
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
                 break;
             //开启美颜
             case R.id.btn_camera_beauty:
+                beauty();
                 break;
             //滤镜
             case R.id.btn_camera_filter:
@@ -129,6 +132,20 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
 
     }
 
+    private void beauty() {
+        if (mBeautyView == null) {
+            ViewStub viewStub = findViewById(R.id.beauty_stub);
+            mBeautyView = (BeautyView) viewStub.inflate();
+            mBeautyView.setVisibility(View.GONE);
+            mBeautyView.setCallback(this);
+        }
+        ll_record.setVisibility(View.GONE);
+        mSwitchCamera.setVisibility(View.GONE);
+        mSpeed.setVisibility(View.GONE);
+        rg_speed.setVisibility(View.GONE);
+        mBeautyView.show();
+    }
+
     private void initFilter() {
         mFilters = new LinkedList<>();
         mFilters.add(new FilterItem(R.drawable.filter_default, "None", FilterType.NONE));
@@ -141,7 +158,6 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
         mFilters.add(new FilterItem(R.drawable.l3, "Lut_3", FilterType.LUT3));
         mFilters.add(new FilterItem(R.drawable.l4, "Lut_4", FilterType.LUT4));
         mFilters.add(new FilterItem(R.drawable.l5, "Lut_5", FilterType.LUT5));
-
     }
 
     private void filter() {
@@ -155,6 +171,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
         ll_record.setVisibility(View.GONE);
         mSwitchCamera.setVisibility(View.GONE);
         mSpeed.setVisibility(View.GONE);
+        rg_speed.setVisibility(View.GONE);
         mFilterView.show();
     }
 
@@ -164,6 +181,15 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
             if (mFilterView != null && mFilterView.getVisibility() == View.VISIBLE
                     && !checkInArea(mFilterView, ev)) {
                 mFilterView.hide();
+                ll_record.setVisibility(View.VISIBLE);
+                mSpeed.setVisibility(View.VISIBLE);
+                mSwitchCamera.setVisibility(View.VISIBLE);
+                return true;
+            }
+
+            if (mBeautyView != null && mBeautyView.getVisibility() == View.VISIBLE
+                    && !checkInArea(mBeautyView, ev)) {
+                mBeautyView.hide();
                 ll_record.setVisibility(View.VISIBLE);
                 mSpeed.setVisibility(View.VISIBLE);
                 mSwitchCamera.setVisibility(View.VISIBLE);
@@ -302,7 +328,21 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
     // TODO: 2018/12/26 滤镜选择
     @Override
     public void onFilterSelect(FilterItem item) {
+    }
 
+
+    // TODO: 2018/12/27 美化
+
+    @Override
+    public void onBufferChange(int ration) {
+    }
+
+    @Override
+    public void onFaceThinChange(int ration) {
+    }
+
+    @Override
+    public void onBigEyeChange(int ratio) {
 
     }
 }
