@@ -6,7 +6,6 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +25,11 @@ public class CameraHelper implements Camera.PreviewCallback {
     private Context context;
     //预览尺寸
     public Camera.Size preSize;
+    /**
+     * 实际的尺寸
+     */
+    private Camera.Size picSize;
+
     private int mCameraId;
     private Camera mCamera;
     private byte[] buffer;
@@ -33,6 +37,7 @@ public class CameraHelper implements Camera.PreviewCallback {
     private SurfaceTexture mSurfaceTexture;
 
     private Point mPreSize;
+    private Point mPicSize;
 
 
     public CameraHelper(int cameraId, Context context) {
@@ -75,12 +80,18 @@ public class CameraHelper implements Camera.PreviewCallback {
         //设置预览数据格式为nv21
         parameters.setPreviewFormat(ImageFormat.NV21);
         preSize = getCloselyPreSize(true, DensityUtils.getScreenWidth(context), DensityUtils.getScreenHeight(context), parameters.getSupportedPreviewSizes());
+        picSize = getCloselyPreSize(true, DensityUtils.getScreenWidth(context), DensityUtils.getScreenHeight(context), parameters.getSupportedPreviewSizes());
+
         //这是摄像头宽、高
+        parameters.setPictureSize(picSize.width,picSize.height);
         parameters.setPreviewSize(preSize.width, preSize.height);
         // 设置摄像头 图像传感器的角度、方向
         mCamera.setParameters(parameters);
 
         Camera.Size pre = parameters.getPreviewSize();
+        Camera.Size pic = parameters.getPictureSize();
+
+        mPicSize = new Point(pic.height, pic.width);
         mPreSize = new Point(pre.height, pre.width);
     }
 
@@ -105,8 +116,12 @@ public class CameraHelper implements Camera.PreviewCallback {
         mPreviewCallback = previewCallback;
     }
 
-    public Point getPreSize() {
+    public Point getPreviewSize() {
         return mPreSize;
+    }
+
+    public Point getPicSize() {
+        return mPicSize;
     }
 
     @Override
@@ -158,20 +173,20 @@ public class CameraHelper implements Camera.PreviewCallback {
         right = right > 1000 ? 1000 : right;
         bottom = bottom > 1000 ? 1000 : bottom;
 
-        areas.add(new Camera.Area(new Rect(left,top,right,bottom),100));
-        areas1.add(new Camera.Area(new Rect(left,top,right,bottom),100));
+        areas.add(new Camera.Area(new Rect(left, top, right, bottom), 100));
+        areas1.add(new Camera.Area(new Rect(left, top, right, bottom), 100));
 
-        if (supportFocus){
+        if (supportFocus) {
             parameters.setFocusAreas(areas);
         }
-        if (supportMetering){
+        if (supportMetering) {
             parameters.setMeteringAreas(areas1);
         }
 
         try {
             mCamera.setParameters(parameters);
             mCamera.autoFocus(callback);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

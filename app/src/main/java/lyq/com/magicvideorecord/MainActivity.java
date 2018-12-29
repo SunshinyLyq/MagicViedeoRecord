@@ -149,15 +149,16 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
     private void initFilter() {
         mFilters = new LinkedList<>();
         mFilters.add(new FilterItem(R.drawable.filter_default, "None", FilterType.NONE));
-        mFilters.add(new FilterItem(R.drawable.gray, "BlackWhite", FilterType.GRAY));
-        mFilters.add(new FilterItem(R.drawable.kuwahara, "Watercolour", FilterType.KUWAHARA));
-        mFilters.add(new FilterItem(R.drawable.snow, "Snow", FilterType.SNOW));
-        mFilters.add(new FilterItem(R.drawable.l1, "Lut_1", FilterType.LUT1));
-        mFilters.add(new FilterItem(R.drawable.cameo, "Cameo", FilterType.CAMEO));
-        mFilters.add(new FilterItem(R.drawable.l2, "Lut_2", FilterType.LUT2));
-        mFilters.add(new FilterItem(R.drawable.l3, "Lut_3", FilterType.LUT3));
-        mFilters.add(new FilterItem(R.drawable.l4, "Lut_4", FilterType.LUT4));
-        mFilters.add(new FilterItem(R.drawable.l5, "Lut_5", FilterType.LUT5));
+        mFilters.add(new FilterItem(R.drawable.gray, "warm", FilterType.WARM));
+        mFilters.add(new FilterItem(R.drawable.kuwahara, "antique", FilterType.ANTIQUE));
+        mFilters.add(new FilterItem(R.drawable.snow, "inkwell", FilterType.INKWELL));
+        mFilters.add(new FilterItem(R.drawable.l1, "brannan", FilterType.BRANNAN));
+        mFilters.add(new FilterItem(R.drawable.cameo, "n1997", FilterType.N1977));
+        mFilters.add(new FilterItem(R.drawable.l2, "freud", FilterType.FREUD));
+        mFilters.add(new FilterItem(R.drawable.l3, "hefe", FilterType.HEFE));
+        mFilters.add(new FilterItem(R.drawable.l4, "hudson", FilterType.HUDSON));
+        mFilters.add(new FilterItem(R.drawable.l5, "nashville", FilterType.NASHVILLE));
+        mFilters.add(new FilterItem(R.drawable.l5, "cool", FilterType.COOL));
     }
 
     private void filter() {
@@ -328,6 +329,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
     // TODO: 2018/12/26 滤镜选择
     @Override
     public void onFilterSelect(FilterItem item) {
+        mCameraView.setFilterSelect(item);
     }
 
 

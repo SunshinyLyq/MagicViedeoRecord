@@ -7,13 +7,11 @@ import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
-import java.lang.invoke.MutableCallSite;
-
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import lyq.com.magicvideorecord.camera.bean.FilterItem;
 import lyq.com.magicvideorecord.camera.render.CameraRender;
-import lyq.com.magicvideorecord.config.Constants;
 import lyq.com.magicvideorecord.utils.camera.CameraHelper;
 
 /**
@@ -67,8 +65,9 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
     private void open() {
         mCameraHelper.stopPreview();
         mCameraHelper.open();
+        mCameraRender.setCameraId(mCameraHelper.getCameraId());
 
-        Point previewSize = mCameraHelper.getPreSize();
+        Point previewSize = mCameraHelper.getPreviewSize();
         dataWidth = previewSize.x;
         dataHeight = previewSize.y;
 
@@ -82,8 +81,8 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
      * 切换摄像头
      */
     public void switchCamera() {
-//        mCameraRender.switchCamera();
         mCameraHelper.switchCamera();
+        mCameraRender.setCameraId(mCameraHelper.getCameraId());
     }
 
     /**
@@ -211,4 +210,14 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
             }
         });
     }
+
+    public void setFilterSelect(final FilterItem item) {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mCameraRender.setFilterSelect(item);
+            }
+        });
+    }
+
 }

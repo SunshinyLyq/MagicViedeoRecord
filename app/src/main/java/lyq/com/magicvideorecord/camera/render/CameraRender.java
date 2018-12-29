@@ -1,17 +1,18 @@
 package lyq.com.magicvideorecord.camera.render;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.SurfaceTexture;
-import android.icu.text.UFormat;
-import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import lyq.com.magicvideorecord.camera.bean.FilterItem;
+import lyq.com.magicvideorecord.camera.fliter.AbstractFilter;
+import lyq.com.magicvideorecord.camera.fliter.NoFilter;
 import lyq.com.magicvideorecord.camera.fliter.ScreenFilter;
+import lyq.com.magicvideorecord.utils.MatrixUtils;
 import lyq.com.magicvideorecord.utils.OpenGLUtils;
 
 /**
@@ -21,28 +22,18 @@ import lyq.com.magicvideorecord.utils.OpenGLUtils;
  */
 public class CameraRender implements GLSurfaceView.Renderer {
 
+    private AbstractFilter screenFilter;
+    private AbstractFilter noFilter;
 
     private Context context;
     private SurfaceTexture mSurfaceTxure;//获取摄像头数据传递过来的帧数据内容
 
     private float[] OM;
-
-    private int[] fFrame = new int[1];
-    private int[] fTexture = new int[1];
     private float[] mtx = new float[16]; // 变换矩阵
-
-    /**
-     * 显示画面的filter
-     */
-    private ScreenFilter screenFilter;
     private int textureID;
-    /**
-     * 预览数据的宽高
-     */
+    /** 预览数据的宽高*/
     private int mPreviewWidth = 0, mPreviewHeight = 0;
-    /**
-     * 控件的宽高
-     */
+    /** 控件的宽高 */
     private int width = 0, height = 0;
 
     private boolean recordingEnabled;
@@ -59,6 +50,10 @@ public class CameraRender implements GLSurfaceView.Renderer {
 
     public CameraRender(Context context) {
         this.context = context;
+        noFilter = new NoFilter(context);
+        screenFilter = new ScreenFilter(context);
+
+
     }
 
     @Override
@@ -66,9 +61,11 @@ public class CameraRender implements GLSurfaceView.Renderer {
         //创建纹理id
         textureID = OpenGLUtils.createTextureID();
         mSurfaceTxure = new SurfaceTexture(textureID);
-
-        screenFilter = new ScreenFilter(context);
         screenFilter.setTextureId(textureID);
+
+        //必须传入上下翻转的矩阵
+        OM= MatrixUtils.getOriginalMatrix();
+        MatrixUtils.flip(OM,false,true);//矩阵上下翻转
     }
 
 
@@ -85,21 +82,20 @@ public class CameraRender implements GLSurfaceView.Renderer {
 //        GLES20.glGenTextures(fFrame.length,fFrame,0);
 //        GLES20.glGenTextures(fTexture.length,fTexture,0);
 
-//        OpenGLUtils.getShowMatrix(mtx,mPreviewWidth,mPreviewHeight,width,height);
-//        screenFilter.setMatrix(mtx);
+        MatrixUtils.getShowMatrix(mtx,mPreviewWidth,mPreviewHeight,width,height);
+        screenFilter.setMatrix(mtx);
 
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
         mSurfaceTxure.updateTexImage();
-        mSurfaceTxure.getTransformMatrix(mtx);
         GLES20.glViewport(0, 0, width, height);
-        screenFilter.setMatrix(mtx);
         screenFilter.draw();
 
         // TODO: 2018/12/26 录制视频 
         if (recordingEnabled) {
+
 
         }
     }
@@ -162,4 +158,12 @@ public class CameraRender implements GLSurfaceView.Renderer {
         recordingEnabled = false;
     }
 
+    public void setCameraId(int cameraId) {
+        screenFilter.setFlag(cameraId);
+    }
+
+    //设置当前选择的滤镜
+    public void setFilterSelect(FilterItem item) {
+
+    }
 }
