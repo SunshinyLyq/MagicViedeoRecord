@@ -43,6 +43,10 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
     private FilterView mFilterView;
     private BeautyView mBeautyView;
     private LinearLayout ll_record;
+    private ImageView mStickerBtn;
+    private ImageButton mMore;
+    private LinearLayout ll_camera_fuction;
+
 
     private static final int MAX_RECORD_TIME = 15000;//最长录制15s
     private boolean recordFlag = false;//是都正在录制视频
@@ -79,6 +83,9 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
         mSpeed = findViewById(R.id.btn_speed);
         rg_speed = findViewById(R.id.rg_speed);
         ll_record = findViewById(R.id.ll_record);
+        mStickerBtn = findViewById(R.id.btn_sticker);
+        mMore = findViewById(R.id.btn_more);
+        ll_camera_fuction = findViewById(R.id.ll_camera_function);
 
 
         mCameraView.setOnTouchListener(this);
@@ -140,8 +147,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
             mBeautyView.setCallback(this);
         }
         ll_record.setVisibility(View.GONE);
-        mSwitchCamera.setVisibility(View.GONE);
-        mSpeed.setVisibility(View.GONE);
+        ll_camera_fuction.setVisibility(View.GONE);
         rg_speed.setVisibility(View.GONE);
         mBeautyView.show();
     }
@@ -170,8 +176,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
             mFilterView.setFilterCallback(this);
         }
         ll_record.setVisibility(View.GONE);
-        mSwitchCamera.setVisibility(View.GONE);
-        mSpeed.setVisibility(View.GONE);
+        ll_camera_fuction.setVisibility(View.GONE);
         rg_speed.setVisibility(View.GONE);
         mFilterView.show();
     }
@@ -183,8 +188,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
                     && !checkInArea(mFilterView, ev)) {
                 mFilterView.hide();
                 ll_record.setVisibility(View.VISIBLE);
-                mSpeed.setVisibility(View.VISIBLE);
-                mSwitchCamera.setVisibility(View.VISIBLE);
+                ll_camera_fuction.setVisibility(View.VISIBLE);
                 return true;
             }
 
@@ -192,8 +196,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
                     && !checkInArea(mBeautyView, ev)) {
                 mBeautyView.hide();
                 ll_record.setVisibility(View.VISIBLE);
-                mSpeed.setVisibility(View.VISIBLE);
-                mSwitchCamera.setVisibility(View.VISIBLE);
+                ll_camera_fuction.setVisibility(View.VISIBLE);
                 return true;
             }
         }

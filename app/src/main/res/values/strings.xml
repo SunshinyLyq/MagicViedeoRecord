@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">MagicVideoRecord</string>
+
+
+    <string name="reverse">翻转</string>
+    <string name="beauty">美化</string>
+    <string name="speed">速度</string>
+    <string name="more">更多</string>
+
+    <string name="extra_slow">极慢</string>
+    <string name="slow">慢</string>
+    <string name="normal">正常</string>
+    <string name="fast">快</string>
+    <string name="extra_fast">极快</string>
+
 </resources>

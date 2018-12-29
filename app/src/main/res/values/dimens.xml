@@ -2,4 +2,18 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="item_space">10dp</dimen>
     <dimen name="filter_height">130dp</dimen>
+    <dimen name="stub_height">160dp</dimen>
+
+    <!--DP尺寸-->
+    <dimen name="dp3">3dp</dimen>
+    <dimen name="dp5">5dp</dimen>
+    <dimen name="dp10">10dp</dimen>
+    <dimen name="dp15">15dp</dimen>
+    <dimen name="dp20">20dp</dimen>
+    <dimen name="dp34">34dp</dimen>
+    <dimen name="dp40">40dp</dimen>
+    <dimen name="dp50">50dp</dimen>
+    <dimen name="dp88">88dp</dimen>
+    <dimen name="dp75">75dp</dimen>
+
 </resources>

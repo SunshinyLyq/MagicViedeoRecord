@@ -10,7 +10,6 @@ import javax.microedition.khronos.opengles.GL10;
 
 import lyq.com.magicvideorecord.camera.bean.FilterItem;
 import lyq.com.magicvideorecord.camera.fliter.AbstractFilter;
-import lyq.com.magicvideorecord.camera.fliter.NoFilter;
 import lyq.com.magicvideorecord.camera.fliter.ScreenFilter;
 import lyq.com.magicvideorecord.utils.MatrixUtils;
 import lyq.com.magicvideorecord.utils.OpenGLUtils;
@@ -50,14 +49,15 @@ public class CameraRender implements GLSurfaceView.Renderer {
 
     public CameraRender(Context context) {
         this.context = context;
-        noFilter = new NoFilter(context);
-        screenFilter = new ScreenFilter(context);
-
+//        noFilter = new NoFilter(context);
 
     }
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+
+        screenFilter = new ScreenFilter(context);
+
         //创建纹理id
         textureID = OpenGLUtils.createTextureID();
         mSurfaceTxure = new SurfaceTexture(textureID);
