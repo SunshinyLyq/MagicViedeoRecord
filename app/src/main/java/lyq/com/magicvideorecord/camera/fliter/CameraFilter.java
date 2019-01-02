@@ -6,10 +6,10 @@ import android.content.Context;
  * @author sunshiny
  * @date 2018/12/18.
  */
-public class ScreenFilter extends OesFilter {
+public class CameraFilter extends OesFilter {
 
 
-    public ScreenFilter(Context context) {
+    public CameraFilter(Context context) {
         super(context);
     }
 
@@ -37,10 +37,5 @@ public class ScreenFilter extends OesFilter {
         mGLTextureBuffer.clear();
         mGLTextureBuffer.put(texture);
         mGLTextureBuffer.position(0);
-    }
-
-    @Override
-    protected void onSizeChanged(int width, int height) {
-
     }
 }

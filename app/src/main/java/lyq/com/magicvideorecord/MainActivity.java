@@ -19,7 +19,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import lyq.com.magicvideorecord.camera.bean.FilterItem;
-import lyq.com.magicvideorecord.camera.bean.FilterType;
+import lyq.com.magicvideorecord.camera.gpufilter.SlideGpuFilterGroup;
+import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterType;
 import lyq.com.magicvideorecord.camera.widget.BeautyView;
 import lyq.com.magicvideorecord.camera.widget.CameraView;
 import lyq.com.magicvideorecord.camera.widget.CircleProgressView;
@@ -28,7 +29,7 @@ import lyq.com.magicvideorecord.camera.widget.FocusImageView;
 import lyq.com.magicvideorecord.config.Constants;
 import lyq.com.magicvideorecord.utils.camera.SensorControler;
 
-public class MainActivity extends AppCompatActivity implements SensorControler.CameraFocusListener, View.OnClickListener, View.OnTouchListener, RadioGroup.OnCheckedChangeListener, FilterView.FilterCallback, BeautyView.onBeautyChangeCallback {
+public class MainActivity extends AppCompatActivity implements SensorControler.CameraFocusListener, View.OnClickListener, View.OnTouchListener, RadioGroup.OnCheckedChangeListener, FilterView.FilterCallback, BeautyView.onBeautyChangeCallback, SlideGpuFilterGroup.OnFilterChangeListener {
 
     private static final String TAG = "MainActivity";
 
@@ -89,6 +90,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
 
 
         mCameraView.setOnTouchListener(this);
+        mCameraView.setOnFilterChangeListener(this);
         mBeautyBtn.setOnClickListener(this);
         mFilterBtn.setOnClickListener(this);
         mSwitchCamera.setOnClickListener(this);
@@ -255,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
+        mCameraView.onTouch(event);
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
                 float sRawX = event.getRawX(); //表示在屏幕上的原始点
@@ -349,5 +352,19 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
     @Override
     public void onBigEyeChange(int ratio) {
 
+    }
+
+    @Override
+    public void onFilterChange(final FilterType type) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (type == FilterType.NONE) {
+                    Toast.makeText(MainActivity.this, "当前没有设置滤镜--" + type, Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(MainActivity.this, "当前滤镜切换为--" + type, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

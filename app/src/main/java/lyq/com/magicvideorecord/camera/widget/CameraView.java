@@ -6,11 +6,13 @@ import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import lyq.com.magicvideorecord.camera.bean.FilterItem;
+import lyq.com.magicvideorecord.camera.gpufilter.SlideGpuFilterGroup;
 import lyq.com.magicvideorecord.camera.render.CameraRender;
 import lyq.com.magicvideorecord.utils.camera.CameraHelper;
 
@@ -216,6 +218,22 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
             @Override
             public void run() {
                 mCameraRender.setFilterSelect(item);
+            }
+        });
+    }
+    public void onTouch(final MotionEvent event) {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mCameraRender.onTouch(event);
+            }
+        });
+    }
+    public void setOnFilterChangeListener(final SlideGpuFilterGroup.OnFilterChangeListener listener) {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mCameraRender.setOnFilterChangeListener(listener);
             }
         });
     }

@@ -1,5 +1,7 @@
 package lyq.com.magicvideorecord.camera.bean;
 
+import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterType;
+
 /**
  * @author sunshiny
  * @date 2018/12/26.

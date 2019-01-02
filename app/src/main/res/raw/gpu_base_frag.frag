@@ -4,7 +4,7 @@ precision mediump float;
 //采样点的坐标
 varying vec2 aCoord;
 
-//采样器,因为SurfaceTexture的特殊性，所以需要用这个采样器
+//采样器
 uniform sampler2D vTexture;
 
 void main(){

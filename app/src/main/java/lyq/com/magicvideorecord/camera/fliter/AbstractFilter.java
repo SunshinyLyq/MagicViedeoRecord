@@ -207,8 +207,8 @@ public abstract class AbstractFilter {
      * 创建GL程序以及初始化变量
      */
     protected void createProgram(Context context) {
-        String vertextShader = OpenGLUtils.readRawTextFile(context, mVertextShaderId);
-        String fragmentShader = OpenGLUtils.readRawTextFile(context, mFragmentShaderId);
+        String vertextShader = OpenGLUtils.readRawTextFile( mVertextShaderId);
+        String fragmentShader = OpenGLUtils.readRawTextFile(mFragmentShaderId);
         mGLProgramId = OpenGLUtils.loadProgram(vertextShader, fragmentShader);
         //获取着色器中变量
         mVPosition = GLES20.glGetAttribLocation(mGLProgramId, "vPosition");
