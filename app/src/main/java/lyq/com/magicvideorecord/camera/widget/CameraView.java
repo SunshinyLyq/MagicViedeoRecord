@@ -238,4 +238,13 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
         });
     }
 
+    public void onBeautyChange(final int level) {
+        queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mCameraRender.changeBeautyLevel(level);
+            }
+        });
+    }
+
 }

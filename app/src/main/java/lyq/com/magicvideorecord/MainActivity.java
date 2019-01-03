@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterItem;
 import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGpuFilterGroup;
+import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterItem;
 import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterType;
 import lyq.com.magicvideorecord.camera.widget.BeautyView;
 import lyq.com.magicvideorecord.camera.widget.CameraView;
@@ -339,16 +339,18 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
     }
 
 
-    // TODO: 2018/12/27 美化
-
+    // TODO: 2018/12/27 美白磨皮
     @Override
-    public void onBufferChange(int ration) {
+    public void onBeautyChange(int ration) {
+        mCameraView.onBeautyChange(ration);
     }
 
+    //瘦脸
     @Override
     public void onFaceThinChange(int ration) {
     }
 
+    //大眼
     @Override
     public void onBigEyeChange(int ratio) {
 

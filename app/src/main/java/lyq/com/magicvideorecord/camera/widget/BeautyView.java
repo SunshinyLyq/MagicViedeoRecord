@@ -76,7 +76,7 @@ public class BeautyView extends LinearLayout {
 
 
                 mBuffing.setProgress(progress);
-                mCallback.onBufferChange(progress);
+                mCallback.onBeautyChange(progress);
             }
 
             @Override
@@ -194,7 +194,7 @@ public class BeautyView extends LinearLayout {
 
 
     public interface onBeautyChangeCallback {
-        void onBufferChange(int ration);
+        void onBeautyChange(int ration);
 
         void onFaceThinChange(int ration);
 

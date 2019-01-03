@@ -176,5 +176,14 @@ public class GPUImageFilter {
         });
     }
 
+    protected void setInteger(final int location, final int intValue){
+        runOnDraw(new Runnable() {
+            @Override
+            public void run() {
+                GLES20.glUniform1i(location,intValue);
+            }
+        });
+    }
+
 
 }

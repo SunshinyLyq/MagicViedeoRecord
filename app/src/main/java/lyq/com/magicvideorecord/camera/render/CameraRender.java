@@ -14,6 +14,7 @@ import lyq.com.magicvideorecord.camera.fliter.CameraFilter;
 import lyq.com.magicvideorecord.camera.fliter.ShowFilter;
 import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGpuFilterGroup;
 import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterItem;
+import lyq.com.magicvideorecord.camera.gpufilter.fliter.BeautyFilter;
 import lyq.com.magicvideorecord.utils.MatrixUtils;
 import lyq.com.magicvideorecord.utils.OpenGLUtils;
 
@@ -33,6 +34,7 @@ public class CameraRender implements GLSurfaceView.Renderer {
     private AbstractFilter showFilter;
     //滑动滤镜，滑动切换滤镜
     private SlideGpuFilterGroup mSlideGpuFilterGroup;
+    private BeautyFilter mBeautyFilter;
 
     private Context context;
     private SurfaceTexture mSurfaceTxure;//获取摄像头数据传递过来的帧数据内容
@@ -217,5 +219,10 @@ public class CameraRender implements GLSurfaceView.Renderer {
     //设置当前选择的滤镜
     public void setFilterSelect(FilterItem item) {
 //        groupFilters.setFilter(FilterFactory.initFilters(item.filterType));
+    }
+
+    //美白磨皮
+    public void changeBeautyLevel(int level) {
+
     }
 }
