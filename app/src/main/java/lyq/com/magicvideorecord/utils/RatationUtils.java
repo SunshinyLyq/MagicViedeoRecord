@@ -1,6 +1,6 @@
 package lyq.com.magicvideorecord.utils;
 
-import lyq.com.magicvideorecord.camera.bean.Rotation;
+import lyq.com.magicvideorecord.camera.gpufilter.factory.Rotation;
 
 /**
  * @author sunshiny

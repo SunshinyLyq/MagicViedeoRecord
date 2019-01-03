@@ -18,7 +18,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import lyq.com.magicvideorecord.R;
-import lyq.com.magicvideorecord.camera.bean.FilterItem;
+import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterItem;
 
 /**
  * @author sunshiny

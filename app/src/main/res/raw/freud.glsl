@@ -1,8 +1,8 @@
  precision highp float;
- varying mediump vec2 textureCoordinate;
+ varying mediump vec2 aCoord;
  
- uniform sampler2D inputImageTexture;
- uniform sampler2D inputImageTexture2;
+ uniform sampler2D vTexture;
+ uniform sampler2D vTexture2;
  
  uniform float inputImageTextureHeight;
  uniform float inputImageTextureWidth;
@@ -24,9 +24,9 @@
 {
     
     vec4 mapped;
-    mapped.r = texture2D(inputImageTexture2, vec2(color.r, 0.0)).r;
-    mapped.g = texture2D(inputImageTexture2, vec2(color.g, 0.0)).g;
-    mapped.b = texture2D(inputImageTexture2, vec2(color.b, 0.0)).b;
+    mapped.r = texture2D(vTexture2, vec2(color.r, 0.0)).r;
+    mapped.g = texture2D(vTexture2, vec2(color.g, 0.0)).g;
+    mapped.b = texture2D(vTexture2, vec2(color.b, 0.0)).b;
     mapped.a = color.a;
     
     return mapped;
@@ -130,8 +130,8 @@
  
  void main()
 {
-    vec4 originColor = texture2D(inputImageTexture, textureCoordinate);
-    vec4 color = texture2D(inputImageTexture, textureCoordinate);
+    vec4 originColor = texture2D(vTexture, aCoord);
+    vec4 color = texture2D(vTexture, aCoord);
     
     color.a = 1.0;
     
@@ -140,10 +140,10 @@
     color = NCColorControl(color, 0.5, 0.1, 0.9);
     
     // rand
-	  float x = textureCoordinate.x*inputImageTextureWidth/texture2Size;
-      float y = textureCoordinate.y*inputImageTextureHeight/texture2Size;
+	  float x = aCoord.x*inputImageTextureWidth/texture2Size;
+      float y = aCoord.y*inputImageTextureHeight/texture2Size;
 
-      vec4 rd = texture2D(inputImageTexture2, vec2( fract(x), fract(y)));
+      vec4 rd = texture2D(vTexture2, vec2( fract(x), fract(y)));
 //    vec4 rd = texture2D(inputImageTexture2, textureCoordinate);
 //    float rand_number1 = PseudoRandom(textureCoordinate.xy);
 //    float rand_number2 = PseudoRandom(textureCoordinate.yx);

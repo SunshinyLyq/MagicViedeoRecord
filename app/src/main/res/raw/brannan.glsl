@@ -3,6 +3,7 @@ precision mediump float;
  varying mediump vec2 aCoord;
  
  uniform sampler2D vTexture;
+
  uniform sampler2D inputImageTexture2;  //process
  uniform sampler2D inputImageTexture3;  //blowout
  uniform sampler2D inputImageTexture4;  //contrast

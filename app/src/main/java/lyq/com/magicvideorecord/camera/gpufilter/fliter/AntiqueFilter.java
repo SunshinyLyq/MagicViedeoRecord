@@ -35,6 +35,8 @@ public class AntiqueFilter extends GPUImageFilter {
     }
 
     protected void onDrawArraysPre() {
+        //设置纹理单元与shader中sampler的关系
+        //后续采样器curve 对应的就是GL_TEXTURE3,上绑定的纹理
         if (this.mToneCurveTexture[0] != -1) {
             GLES20.glActiveTexture(GLES20.GL_TEXTURE3);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, mToneCurveTexture[0]);

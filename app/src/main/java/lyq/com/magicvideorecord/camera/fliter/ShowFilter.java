@@ -11,9 +11,9 @@ import lyq.com.magicvideorecord.R;
  * @desc  camerafilter 是往fbo中绘制，
  * 也就是往OpenGL中绘制，不需要采用额外的采样器，直接使用sampler2D就可以
  */
-public class NoFilter extends AbstractFilter {
+public class ShowFilter extends AbstractFilter {
 
-    public NoFilter(Context context) {
+    public ShowFilter(Context context) {
         super(context, R.raw.base_vertex,R.raw.base_frag);
     }
 

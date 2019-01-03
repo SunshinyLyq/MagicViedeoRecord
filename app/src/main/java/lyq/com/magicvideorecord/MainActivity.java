@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import lyq.com.magicvideorecord.camera.bean.FilterItem;
-import lyq.com.magicvideorecord.camera.gpufilter.SlideGpuFilterGroup;
+import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterItem;
+import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGpuFilterGroup;
 import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterType;
 import lyq.com.magicvideorecord.camera.widget.BeautyView;
 import lyq.com.magicvideorecord.camera.widget.CameraView;
@@ -156,17 +156,17 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
 
     private void initFilter() {
         mFilters = new LinkedList<>();
-        mFilters.add(new FilterItem(R.drawable.filter_default, "None", FilterType.NONE));
-        mFilters.add(new FilterItem(R.drawable.gray, "warm", FilterType.WARM));
-        mFilters.add(new FilterItem(R.drawable.kuwahara, "antique", FilterType.ANTIQUE));
-        mFilters.add(new FilterItem(R.drawable.snow, "inkwell", FilterType.INKWELL));
-        mFilters.add(new FilterItem(R.drawable.l1, "brannan", FilterType.BRANNAN));
-        mFilters.add(new FilterItem(R.drawable.cameo, "n1997", FilterType.N1977));
-        mFilters.add(new FilterItem(R.drawable.l2, "freud", FilterType.FREUD));
-        mFilters.add(new FilterItem(R.drawable.l3, "hefe", FilterType.HEFE));
-        mFilters.add(new FilterItem(R.drawable.l4, "hudson", FilterType.HUDSON));
-        mFilters.add(new FilterItem(R.drawable.l5, "nashville", FilterType.NASHVILLE));
-        mFilters.add(new FilterItem(R.drawable.l5, "cool", FilterType.COOL));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_default, "None", FilterType.NONE));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_warm, "warm", FilterType.WARM));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_antique, "antique", FilterType.ANTIQUE));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_inkwell, "inkwell", FilterType.INKWELL));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_brannan, "brannan", FilterType.BRANNAN));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_freud, "freud", FilterType.FREUD));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_hefe, "hefe", FilterType.HEFE));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_hudson, "hudson", FilterType.HUDSON));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_nashville, "nashville", FilterType.NASHVILLE));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_cool, "cool", FilterType.COOL));
+        mFilters.add(new FilterItem(R.mipmap.filter_thumb_sketch, "sketch", FilterType.SKETCH));
     }
 
     private void filter() {
@@ -359,11 +359,11 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (type == FilterType.NONE) {
-                    Toast.makeText(MainActivity.this, "当前没有设置滤镜--" + type, Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(MainActivity.this, "当前滤镜切换为--" + type, Toast.LENGTH_SHORT).show();
-                }
+//                if (type == FilterType.NONE) {
+////                    Toast.makeText(MainActivity.this, "当前没有设置滤镜--" + type, Toast.LENGTH_SHORT).show();
+//                } else {
+////                    Toast.makeText(MainActivity.this, "当前滤镜切换为--" + type, Toast.LENGTH_SHORT).show();
+//                }
             }
         });
     }

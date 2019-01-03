@@ -10,7 +10,7 @@ import lyq.com.magicvideorecord.utils.OpenGLUtils;
 /**
  * @author sunshiny
  * @date 2018/12/30.
- * @desc
+ * @desc BrannanFilter
  */
 public class BrannanFilter extends GPUImageFilter {
     private int[] inputTextureHandles = {-1,-1,-1,-1,-1};

@@ -1,7 +1,7 @@
-varying highp vec2 textureCoordinate;
+varying highp vec2 aCoord;
 precision highp float;
 
-uniform sampler2D inputImageTexture;
+uniform sampler2D vTexture;
 uniform sampler2D curve;
 
 void main()
@@ -9,14 +9,14 @@ void main()
 	lowp vec4 textureColor;
 	lowp vec4 textureColorOri;
 	
-	float xCoordinate = textureCoordinate.x;
-	float yCoordinate = textureCoordinate.y;
+	float xCoordinate = aCoord.x;
+	float yCoordinate = aCoord.y;
 	
 	highp float redCurveValue;
 	highp float greenCurveValue;
 	highp float blueCurveValue;
 	
-	textureColor = texture2D( inputImageTexture, vec2(xCoordinate, yCoordinate));
+	textureColor = texture2D(vTexture, vec2(xCoordinate, yCoordinate));
 	textureColorOri = textureColor;
 	// step1 curve 
 	redCurveValue = texture2D(curve, vec2(textureColor.r, 0.0)).r;

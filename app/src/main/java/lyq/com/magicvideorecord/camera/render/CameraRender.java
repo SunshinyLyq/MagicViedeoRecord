@@ -4,17 +4,16 @@ import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import lyq.com.magicvideorecord.camera.bean.FilterItem;
 import lyq.com.magicvideorecord.camera.fliter.AbstractFilter;
-import lyq.com.magicvideorecord.camera.fliter.NoFilter;
 import lyq.com.magicvideorecord.camera.fliter.CameraFilter;
-import lyq.com.magicvideorecord.camera.gpufilter.SlideGpuFilterGroup;
+import lyq.com.magicvideorecord.camera.fliter.ShowFilter;
+import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGpuFilterGroup;
+import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterItem;
 import lyq.com.magicvideorecord.utils.MatrixUtils;
 import lyq.com.magicvideorecord.utils.OpenGLUtils;
 
@@ -60,6 +59,7 @@ public class CameraRender implements GLSurfaceView.Renderer {
     private static final int RECORDING_PAUSED = 5;
 
     private float mSpeed;
+    private int id;
 
     //创建fbo
     private int[] mFrameBuffers = new int[1];
@@ -80,10 +80,9 @@ public class CameraRender implements GLSurfaceView.Renderer {
 
         //在OpenGLThread中创建，不然那会出错
         cameraFilter = new CameraFilter(context);
-        showFilter = new NoFilter(context);
+        showFilter = new ShowFilter(context);
 
         mSlideGpuFilterGroup.init();
-
         //创建纹理id
         textureID = OpenGLUtils.createTextureID();
         mSurfaceTxure = new SurfaceTexture(textureID);
@@ -127,13 +126,15 @@ public class CameraRender implements GLSurfaceView.Renderer {
         mSurfaceTxure.updateTexImage();
         OpenGLUtils.glBindFrameTexture(mFrameBuffers[0],mFrameBufferTextures[0]);
         GLES20.glViewport(0, 0, mPreviewWidth, mPreviewHeight);
+        //先将SurfaceTexure中的YUV数据绘制到FBO中
         cameraFilter.draw();
         OpenGLUtils.glUnbindFrameBuffer();
-
         mSlideGpuFilterGroup.onDrawFrame(mFrameBufferTextures[0]);
 
         //显示到屏幕上去,需要重新给个输出的宽高
         GLES20.glViewport(0,0,width,height);
+
+        //将FBO中的纹理绘制到屏幕中
         showFilter.setTextureId(mSlideGpuFilterGroup.getOutputTexture());
         showFilter.draw();
 
@@ -200,9 +201,7 @@ public class CameraRender implements GLSurfaceView.Renderer {
     //设置滤镜切换的监听
     public void setOnFilterChangeListener(SlideGpuFilterGroup.OnFilterChangeListener listener){
         mSlideGpuFilterGroup.setOnFilterChangeListener(listener);
-
     }
-
     public void setSpeed(float speed) {
         mSpeed = speed;
     }
@@ -213,12 +212,10 @@ public class CameraRender implements GLSurfaceView.Renderer {
 
     public void setCameraId(int cameraId) {
         cameraFilter.setFlag(cameraId);
-
-        Log.e(TAG, "setCameraId: "+cameraId );
     }
 
     //设置当前选择的滤镜
     public void setFilterSelect(FilterItem item) {
-
+//        groupFilters.setFilter(FilterFactory.initFilters(item.filterType));
     }
 }

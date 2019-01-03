@@ -8,8 +8,9 @@ import lyq.com.magicvideorecord.camera.gpufilter.fliter.FreudFilter;
 import lyq.com.magicvideorecord.camera.gpufilter.fliter.HefeFilter;
 import lyq.com.magicvideorecord.camera.gpufilter.fliter.HudsonFilter;
 import lyq.com.magicvideorecord.camera.gpufilter.fliter.InkwellFilter;
-import lyq.com.magicvideorecord.camera.gpufilter.fliter.N1977Filter;
 import lyq.com.magicvideorecord.camera.gpufilter.fliter.NashvilleFilter;
+import lyq.com.magicvideorecord.camera.gpufilter.fliter.SketchFilter;
+import lyq.com.magicvideorecord.camera.gpufilter.fliter.WarmFilter;
 
 /**
  * @author sunshiny
@@ -38,14 +39,14 @@ public class FilterFactory {
                 return new HudsonFilter();
             case INKWELL:
                 return new InkwellFilter();
-            case N1977:
-                return new N1977Filter();
             case NASHVILLE:
                 return new NashvilleFilter();
             case COOL:
                 return new CoolFilter();
             case WARM:
                 return new WarmFilter();
+            case SKETCH:
+                return new SketchFilter();
             default:
                 return null;
         }
@@ -53,8 +54,5 @@ public class FilterFactory {
 
     public static FilterType getFilterType() {
         return filterType;
-    }
-
-    private static class WarmFilter extends GPUImageFilter {
     }
 }

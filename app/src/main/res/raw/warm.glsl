@@ -1,7 +1,7 @@
-varying highp vec2 textureCoordinate;
+varying highp vec2 aCoord;
 precision highp float; 
   
-uniform sampler2D inputImageTexture;
+uniform sampler2D vTexture;
 uniform sampler2D curve;
 uniform sampler2D greyFrame;
 uniform sampler2D layerImage;
@@ -12,14 +12,14 @@ void main()
 	vec4 greyColor;
 	vec4 layerColor;
 	
-	float xCoordinate = textureCoordinate.x;
-	float yCoordinate = textureCoordinate.y;
+	float xCoordinate = aCoord.x;
+	float yCoordinate = aCoord.y;
 	
 	highp float redCurveValue;
 	highp float greenCurveValue; 
 	highp float blueCurveValue;
 	
-	textureColor = texture2D( inputImageTexture, vec2(xCoordinate, yCoordinate));
+	textureColor = texture2D( vTexture, vec2(xCoordinate, yCoordinate));
 	
 	greyColor = texture2D(greyFrame, vec2(xCoordinate, yCoordinate));
 	layerColor = texture2D(layerImage, vec2(xCoordinate, yCoordinate));

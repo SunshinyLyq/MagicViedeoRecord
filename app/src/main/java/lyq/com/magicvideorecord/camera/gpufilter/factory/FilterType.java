@@ -15,6 +15,6 @@ public enum FilterType {
     HEFE,
     HUDSON,
     INKWELL,
-    N1977,
     NASHVILLE,
+    SKETCH
 }

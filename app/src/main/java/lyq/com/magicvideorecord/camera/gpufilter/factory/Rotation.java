@@ -1,4 +1,4 @@
-package lyq.com.magicvideorecord.camera.bean;
+package lyq.com.magicvideorecord.camera.gpufilter.factory;
 
 /**
  * @author sunshiny

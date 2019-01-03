@@ -14,7 +14,7 @@ import lyq.com.magicvideorecord.utils.RatationUtils;
 /**
  * @author sunshiny
  * @date 2018/12/30.
- * @desc
+ * @desc 基础滤镜类
  */
 public class GPUImageFilter {
     private final LinkedList<Runnable> mRunOnDraw;
@@ -89,17 +89,20 @@ public class GPUImageFilter {
         mInputHeight = height;
     }
 
-    public int onDrawFrame(int textureId){
+    protected int onDrawFrame(int textureId){
         return this.onDrawFrame(textureId,mGLVertexBuffer,mGLFragmentBuffer);
     }
 
-    private int onDrawFrame(int textureId, FloatBuffer vertexBuffer,
-                             FloatBuffer textureBuffer) {
+    public int onDrawFrame(int textureId, FloatBuffer vertexBuffer,
+                           FloatBuffer textureBuffer) {
+        //使用着色器
         GLES20.glUseProgram(mGLProgramId);
+        //延迟绘画
         runPendingOnDrawTasks();
         if (!mIsInitialzed){
             return OpenGLUtils.NOT_INIT;
         }
+        //设置顶点缓冲区的起始位置
         vertexBuffer.position(0);
         //传值的过程
         GLES20.glVertexAttribPointer(mVPosition,2,GLES20.GL_FLOAT,false,0,vertexBuffer);
@@ -108,6 +111,7 @@ public class GPUImageFilter {
         GLES20.glEnableVertexAttribArray(mVCoord);
 
         if (textureId != OpenGLUtils.NO_TEXTURE){
+            //选择活动纹理单元
             GLES20.glActiveTexture(GLES20.GL_TEXTURE0);
             GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,textureId);
             GLES20.glUniform1i(mVTexture,0);
@@ -120,6 +124,7 @@ public class GPUImageFilter {
         //解绑
         GLES20.glDisableVertexAttribArray(mVPosition);
         GLES20.glDisableVertexAttribArray(mVCoord);
+
         onDrawArraysAfter();
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
 

@@ -1,10 +1,9 @@
-package lyq.com.magicvideorecord.camera.gpufilter;
+package lyq.com.magicvideorecord.camera.gpufilter.base;
 
 import android.opengl.GLES20;
 import android.view.MotionEvent;
 import android.widget.Scroller;
 
-import lyq.com.magicvideorecord.camera.gpufilter.base.GPUImageFilter;
 import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterFactory;
 import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterType;
 import lyq.com.magicvideorecord.config.Constants;
@@ -20,6 +19,7 @@ import lyq.com.magicvideorecord.utils.OpenGLUtils;
  * 当滑动的位置大于手指落下的位置，为右滑，反之为向左滑
  * 当从右向左滑时，在滑动过程中，对当前的画面进行裁剪，
  * 也就是屏幕中呈现出两种滤镜，根据滑动距离来计算出滤镜呈现的大小
+ * 这个将滤镜绘制到了FBO中了
  */
 public class SlideGpuFilterGroup {
 
@@ -29,12 +29,12 @@ public class SlideGpuFilterGroup {
             FilterType.ANTIQUE,
             FilterType.INKWELL,
             FilterType.BRANNAN,
-            FilterType.N1977,
             FilterType.FREUD,
             FilterType.HEFE,
             FilterType.HUDSON,
             FilterType.NASHVILLE,
-            FilterType.COOL
+            FilterType.COOL,
+            FilterType.SKETCH
     };
 
     private GPUImageFilter currentFilter;

@@ -11,8 +11,8 @@ import android.view.MotionEvent;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import lyq.com.magicvideorecord.camera.bean.FilterItem;
-import lyq.com.magicvideorecord.camera.gpufilter.SlideGpuFilterGroup;
+import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterItem;
+import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGpuFilterGroup;
 import lyq.com.magicvideorecord.camera.render.CameraRender;
 import lyq.com.magicvideorecord.utils.camera.CameraHelper;
 

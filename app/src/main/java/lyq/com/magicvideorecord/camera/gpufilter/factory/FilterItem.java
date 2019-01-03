@@ -1,6 +1,4 @@
-package lyq.com.magicvideorecord.camera.bean;
-
-import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterType;
+package lyq.com.magicvideorecord.camera.gpufilter.factory;
 
 /**
  * @author sunshiny
@@ -17,10 +15,5 @@ public class FilterItem {
         this.imgRes = imgRes;
         this.name = name;
         this.filterType = filterType;
-    }
-
-    // TODO: 2018/12/26 根据不同的滤镜创建对应的类
-    public void initFilter(){
-
     }
 }
