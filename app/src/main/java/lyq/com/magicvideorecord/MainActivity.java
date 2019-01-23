@@ -71,6 +71,7 @@ public class MainActivity extends AppCompatActivity implements SensorControler.C
         mSensorControler.setCameraFocusListener(this);
         initView();
         initFilter();
+
     }
 
 
