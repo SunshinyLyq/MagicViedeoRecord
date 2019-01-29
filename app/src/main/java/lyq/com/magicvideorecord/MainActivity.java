@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGpuFilterGroup;
+import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGroupFilter;
 import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterItem;
 import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterType;
 import lyq.com.magicvideorecord.camera.widget.BeautyView;
@@ -29,7 +29,7 @@ import lyq.com.magicvideorecord.camera.widget.FocusImageView;
 import lyq.com.magicvideorecord.config.Constants;
 import lyq.com.magicvideorecord.utils.camera.SensorControler;
 
-public class MainActivity extends AppCompatActivity implements SensorControler.CameraFocusListener, View.OnClickListener, View.OnTouchListener, RadioGroup.OnCheckedChangeListener, FilterView.FilterCallback, BeautyView.onBeautyChangeCallback, SlideGpuFilterGroup.OnFilterChangeListener {
+public class MainActivity extends AppCompatActivity implements SensorControler.CameraFocusListener, View.OnClickListener, View.OnTouchListener, RadioGroup.OnCheckedChangeListener, FilterView.FilterCallback, BeautyView.onBeautyChangeCallback, SlideGroupFilter.OnFilterChangeListener {
 
     private static final String TAG = "MainActivity";
 

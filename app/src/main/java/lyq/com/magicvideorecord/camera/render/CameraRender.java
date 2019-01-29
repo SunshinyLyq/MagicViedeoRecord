@@ -12,9 +12,10 @@ import javax.microedition.khronos.opengles.GL10;
 import lyq.com.magicvideorecord.camera.fliter.AbstractFilter;
 import lyq.com.magicvideorecord.camera.fliter.CameraFilter;
 import lyq.com.magicvideorecord.camera.fliter.ShowFilter;
-import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGpuFilterGroup;
+import lyq.com.magicvideorecord.camera.gpufilter.Beauty.BeautyFilter;
+import lyq.com.magicvideorecord.camera.gpufilter.base.GroupFilter;
+import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGroupFilter;
 import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterItem;
-import lyq.com.magicvideorecord.camera.gpufilter.fliter.BeautyFilter;
 import lyq.com.magicvideorecord.utils.MatrixUtils;
 import lyq.com.magicvideorecord.utils.OpenGLUtils;
 
@@ -33,7 +34,8 @@ public class CameraRender implements GLSurfaceView.Renderer {
     //没有无滤镜，默认情况下的,显示到屏幕上去
     private AbstractFilter showFilter;
     //滑动滤镜，滑动切换滤镜
-    private SlideGpuFilterGroup mSlideGpuFilterGroup;
+    private SlideGroupFilter mSlideGroupFilter;
+    private GroupFilter mGroupFilter;
     private BeautyFilter mBeautyFilter;
 
     private Context context;
@@ -70,7 +72,9 @@ public class CameraRender implements GLSurfaceView.Renderer {
 
     public CameraRender(Context context) {
         this.context = context;
-        mSlideGpuFilterGroup = new SlideGpuFilterGroup();
+        mSlideGroupFilter = new SlideGroupFilter();
+        mGroupFilter = new GroupFilter();
+        mBeautyFilter = new BeautyFilter();
 
         //必须传入上下翻转的矩阵
         OM = MatrixUtils.getOriginalMatrix();
@@ -84,7 +88,9 @@ public class CameraRender implements GLSurfaceView.Renderer {
         cameraFilter = new CameraFilter(context);
         showFilter = new ShowFilter(context);
 
-        mSlideGpuFilterGroup.init();
+        mSlideGroupFilter.init();
+        mGroupFilter.init();
+        mBeautyFilter.init();
         //创建纹理id
         textureID = OpenGLUtils.createTextureID();
         mSurfaceTxure = new SurfaceTexture(textureID);
@@ -113,8 +119,10 @@ public class CameraRender implements GLSurfaceView.Renderer {
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D, 0);
 
 
-        cameraFilter.setSize(mPreviewWidth,mPreviewHeight);
-        mSlideGpuFilterGroup.onSizeChanged(mPreviewWidth,mPreviewHeight);
+        cameraFilter.setSize(mPreviewWidth, mPreviewHeight);
+        mSlideGroupFilter.onSizeChanged(mPreviewWidth, mPreviewHeight);
+        mGroupFilter.onSizeChanged(mPreviewWidth, mPreviewHeight);
+        mBeautyFilter.onSizeChanged(mPreviewWidth, mPreviewHeight);
 
         //用来显示的矩阵,显示到屏幕上去
         MatrixUtils.getShowMatrix(mtx, mPreviewWidth, mPreviewHeight, width, height);
@@ -126,21 +134,23 @@ public class CameraRender implements GLSurfaceView.Renderer {
     public void onDrawFrame(GL10 gl) {
 
         mSurfaceTxure.updateTexImage();
-        OpenGLUtils.glBindFrameTexture(mFrameBuffers[0],mFrameBufferTextures[0]);
+        OpenGLUtils.glBindFrameTexture(mFrameBuffers[0], mFrameBufferTextures[0]);
         GLES20.glViewport(0, 0, mPreviewWidth, mPreviewHeight);
         //先将SurfaceTexure中的YUV数据绘制到FBO中
         cameraFilter.draw();
         OpenGLUtils.glUnbindFrameBuffer();
-        mSlideGpuFilterGroup.onDrawFrame(mFrameBufferTextures[0]);
+        mGroupFilter.onDrawFrame(mFrameBufferTextures[0]);
+        mSlideGroupFilter.onDrawFrame(mGroupFilter.getOutputTexture());
+//        int id = mBeautyFilter.onDrawFrameBuffer(mSlideGroupFilter.getOutputTexture());
 
         //显示到屏幕上去,需要重新给个输出的宽高
-        GLES20.glViewport(0,0,width,height);
-
+        GLES20.glViewport(0, 0, width, height);
         //将FBO中的纹理绘制到屏幕中
-        showFilter.setTextureId(mSlideGpuFilterGroup.getOutputTexture());
+        showFilter.setTextureId(mGroupFilter.getOutputTexture());
         showFilter.draw();
 
-        // TODO: 2018/12/26 录制视频 
+
+        // TODO: 2018/12/26 录制视频
         if (recordingEnabled) {
 
 
@@ -196,14 +206,17 @@ public class CameraRender implements GLSurfaceView.Renderer {
     public void startRecord() {
         recordingEnabled = true;
     }
+
     //触屏事件的传递
-    public void onTouch(MotionEvent event){
-        mSlideGpuFilterGroup.onTouchEvent(event);
+    public void onTouch(MotionEvent event) {
+        mSlideGroupFilter.onTouchEvent(event);
     }
+
     //设置滤镜切换的监听
-    public void setOnFilterChangeListener(SlideGpuFilterGroup.OnFilterChangeListener listener){
-        mSlideGpuFilterGroup.setOnFilterChangeListener(listener);
+    public void setOnFilterChangeListener(SlideGroupFilter.OnFilterChangeListener listener) {
+        mSlideGroupFilter.setOnFilterChangeListener(listener);
     }
+
     public void setSpeed(float speed) {
         mSpeed = speed;
     }
@@ -218,11 +231,11 @@ public class CameraRender implements GLSurfaceView.Renderer {
 
     //设置当前选择的滤镜
     public void setFilterSelect(FilterItem item) {
-//        groupFilters.setFilter(FilterFactory.initFilters(item.filterType));
+        mGroupFilter.setItem(item);
     }
 
     //美白磨皮
     public void changeBeautyLevel(int level) {
-
+        mBeautyFilter.setSkinBeautyIntensity((float) (level / 100.0));
     }
 }

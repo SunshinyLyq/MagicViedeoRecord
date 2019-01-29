@@ -21,7 +21,7 @@ import lyq.com.magicvideorecord.utils.OpenGLUtils;
  * 也就是屏幕中呈现出两种滤镜，根据滑动距离来计算出滤镜呈现的大小
  * 这个将滤镜绘制到了FBO中了
  */
-public class SlideGpuFilterGroup {
+public class SlideGroupFilter {
 
     private FilterType[] filterTypes = new FilterType[]{
             FilterType.NONE,
@@ -56,7 +56,7 @@ public class SlideGpuFilterGroup {
     private boolean isLocked;
     private boolean isNeedSwitch;
 
-    public SlideGpuFilterGroup() {
+    public SlideGroupFilter() {
         initFilter();
         mScroller = new Scroller(MyApplication.getContext());
     }
@@ -90,7 +90,6 @@ public class SlideGpuFilterGroup {
         OpenGLUtils.genTexturesWithParameter(1, mFrameTextureBuffers, 0, GLES20.GL_RGBA
                 , width, height);
         onFilterSizeChanged(width, height);
-
 
     }
 

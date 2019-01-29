@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
+import android.opengl.GLES30;
 import android.opengl.GLUtils;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,6 +24,8 @@ import lyq.com.magicvideorecord.config.MyApplication;
  * @date 2018/12/18.
  */
 public class OpenGLUtils {
+
+    private static final String TAG = "OpenGLUtils";
 
     public static final int NO_TEXTURE = -1;
     public static final int NOT_INIT = -1;
@@ -250,6 +254,51 @@ public class OpenGLUtils {
             e.printStackTrace();
         }
         return image;
+    }
+
+    /**
+     * 创建Sampler2D的Framebuffer 和 Texture
+     * @param frameBuffer
+     * @param frameBufferTexture
+     * @param width
+     * @param height
+     */
+    public static void createFrameBuffer(int[] frameBuffer, int[] frameBufferTexture,
+                                         int width, int height) {
+        GLES30.glGenFramebuffers(frameBuffer.length, frameBuffer, 0);
+        GLES30.glGenTextures(frameBufferTexture.length, frameBufferTexture, 0);
+        for (int i = 0; i < frameBufferTexture.length; i++) {
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, frameBufferTexture[i]);
+            GLES30.glTexImage2D(GLES30.GL_TEXTURE_2D, 0, GLES30.GL_RGBA, width, height, 0,
+                    GLES30.GL_RGBA, GLES30.GL_UNSIGNED_BYTE, null);
+            GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D,
+                    GLES30.GL_TEXTURE_MAG_FILTER, GLES30.GL_LINEAR);
+            GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D,
+                    GLES30.GL_TEXTURE_MIN_FILTER, GLES30.GL_LINEAR);
+            GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D,
+                    GLES30.GL_TEXTURE_WRAP_S, GLES30.GL_CLAMP_TO_EDGE);
+            GLES30.glTexParameterf(GLES30.GL_TEXTURE_2D,
+                    GLES30.GL_TEXTURE_WRAP_T, GLES30.GL_CLAMP_TO_EDGE);
+            GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, frameBuffer[i]);
+            GLES30.glFramebufferTexture2D(GLES30.GL_FRAMEBUFFER, GLES30.GL_COLOR_ATTACHMENT0,
+                    GLES30.GL_TEXTURE_2D, frameBufferTexture[i], 0);
+            GLES30.glBindTexture(GLES30.GL_TEXTURE_2D, 0);
+            GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
+        }
+        checkGlError("createFrameBuffer");
+    }
+
+    /**
+     * 检查是否出错
+     * @param op
+     */
+    public static void checkGlError(String op) {
+        int error = GLES30.glGetError();
+        if (error != GLES30.GL_NO_ERROR) {
+            String msg = op + ": glError 0x" + Integer.toHexString(error);
+            Log.e(TAG, msg);
+            throw new RuntimeException(msg);
+        }
     }
 
 }

@@ -11,6 +11,7 @@ uniform int width;
 uniform int height;
 
 vec2 blurCoordinates[20];
+
 void main(){
     //1、 模糊 ： 平滑处理 降噪
     //singleStepOffset：步长

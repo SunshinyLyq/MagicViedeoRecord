@@ -12,7 +12,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import lyq.com.magicvideorecord.camera.gpufilter.factory.FilterItem;
-import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGpuFilterGroup;
+import lyq.com.magicvideorecord.camera.gpufilter.base.SlideGroupFilter;
 import lyq.com.magicvideorecord.camera.render.CameraRender;
 import lyq.com.magicvideorecord.utils.camera.CameraHelper;
 
@@ -55,7 +55,7 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
         setCameraDistance(100);//设置相机距离
 
         /**初始化相机管理类*/
-        mCameraHelper = new CameraHelper(Camera.CameraInfo.CAMERA_FACING_BACK, getContext());
+        mCameraHelper = new CameraHelper(Camera.CameraInfo.CAMERA_FACING_FRONT, getContext());
 
         /**初始化相机绘画类*/
         mCameraRender = new CameraRender(mContext);
@@ -229,7 +229,7 @@ public class CameraView extends GLSurfaceView implements GLSurfaceView.Renderer,
             }
         });
     }
-    public void setOnFilterChangeListener(final SlideGpuFilterGroup.OnFilterChangeListener listener) {
+    public void setOnFilterChangeListener(final SlideGroupFilter.OnFilterChangeListener listener) {
         queueEvent(new Runnable() {
             @Override
             public void run() {

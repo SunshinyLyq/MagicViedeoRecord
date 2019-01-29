@@ -1,6 +1,7 @@
 package lyq.com.magicvideorecord.camera.gpufilter.base;
 
 import android.opengl.GLES20;
+import android.opengl.GLES30;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -28,12 +29,23 @@ public class GPUImageFilter {
 
     protected int mInputWidth;
     protected int mInputHeight;
-    protected boolean mIsInitialzed;
+    protected boolean mIsInitialized;
 
     protected FloatBuffer mGLVertexBuffer; //顶点坐标buffer
     protected FloatBuffer mGLFragmentBuffer; //纹理坐标buffer
 
     protected int mOutputWidth, mOutputHeight;
+
+    // FBO的宽高，可能跟输入的纹理大小不一致
+    protected int mFrameWidth = -1;
+    protected int mFrameHeight = -1;
+
+    // FBO
+    protected int[] mFrameBuffers;
+    protected int[] mFrameBufferTextures;
+
+    //滤镜是否可用
+    private boolean mFilterEnable = true;
 
 
     public GPUImageFilter() {
@@ -64,7 +76,7 @@ public class GPUImageFilter {
         mVPosition = GLES20.glGetAttribLocation(mGLProgramId,"vPosition");
         mVCoord = GLES20.glGetAttribLocation(mGLProgramId,"vCoord");
         mVTexture =GLES20.glGetUniformLocation(mGLProgramId,"vTexture");
-        mIsInitialzed=true;
+        mIsInitialized=true;
     }
 
     protected void onInitialized(){
@@ -76,7 +88,7 @@ public class GPUImageFilter {
     }
 
     public final void destory(){
-        mIsInitialzed = false;
+        mIsInitialized = false;
         GLES20.glDeleteProgram(mGLProgramId);
         onDestroy();
     }
@@ -93,15 +105,95 @@ public class GPUImageFilter {
         return this.onDrawFrame(textureId,mGLVertexBuffer,mGLFragmentBuffer);
     }
 
+    public int onDrawFrameBuffer(int textureId){
+        return this.onDrawFrameBuffer(textureId,mGLVertexBuffer,mGLFragmentBuffer);
+    }
+
     public int onDrawFrame(int textureId, FloatBuffer vertexBuffer,
                            FloatBuffer textureBuffer) {
         //使用着色器
         GLES20.glUseProgram(mGLProgramId);
         //延迟绘画
         runPendingOnDrawTasks();
-        if (!mIsInitialzed){
+        if (!mIsInitialized){
             return OpenGLUtils.NOT_INIT;
         }
+
+        //绘制纹理
+        onDrawTexture(textureId,vertexBuffer,textureBuffer);
+
+        return OpenGLUtils.ON_DRAWN;
+    }
+
+    public int onDrawFrameBuffer(int textureId, FloatBuffer vertexBuffer,
+                                 FloatBuffer textureBuffer){
+
+        if (textureId == OpenGLUtils.NO_TEXTURE || mFrameBuffers == null
+                || !mIsInitialized || !mFilterEnable) {
+
+            return textureId;
+        }
+
+        // 绑定FBO
+        GLES30.glViewport(0, 0, mFrameWidth, mFrameHeight);
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, mFrameBuffers[0]);
+        // 使用当前的program
+        GLES30.glUseProgram(mGLProgramId);
+        // 运行延时任务，这个要放在glUseProgram之后，要不然某些设置项会不生效
+        runPendingOnDrawTasks();
+
+        // 绘制纹理
+        onDrawTexture(textureId, vertexBuffer, textureBuffer);
+
+        GLES30.glBindFramebuffer(GLES30.GL_FRAMEBUFFER, 0);
+        return mFrameBufferTextures[0];
+    }
+
+
+    /**
+     * 创建FBO
+     * @param width
+     * @param height
+     */
+    public void initFrameBuffer(int width, int height) {
+        if (!isInitialized()) {
+            return;
+        }
+        if (mFrameBuffers != null && (mFrameWidth != width || mFrameHeight != height)) {
+            destroyFrameBuffer();
+        }
+        if (mFrameBuffers == null) {
+            mFrameWidth = width;
+            mFrameHeight = height;
+            mFrameBuffers = new int[1];
+            mFrameBufferTextures = new int[1];
+            OpenGLUtils.createFrameBuffer(mFrameBuffers, mFrameBufferTextures, width, height);
+        }
+    }
+
+    /**
+     * 销毁纹理
+     */
+    public void destroyFrameBuffer() {
+        if (!mIsInitialized) {
+            return;
+        }
+        if (mFrameBufferTextures != null) {
+            GLES30.glDeleteTextures(1, mFrameBufferTextures, 0);
+            mFrameBufferTextures = null;
+        }
+
+        if (mFrameBuffers != null) {
+            GLES30.glDeleteFramebuffers(1, mFrameBuffers, 0);
+            mFrameBuffers = null;
+        }
+        mFrameWidth = -1;
+        mFrameWidth = -1;
+    }
+
+
+    protected void onDrawTexture(int textureId, FloatBuffer vertexBuffer,
+                                 FloatBuffer textureBuffer){
         //设置顶点缓冲区的起始位置
         vertexBuffer.position(0);
         //传值的过程
@@ -127,8 +219,6 @@ public class GPUImageFilter {
 
         onDrawArraysAfter();
         GLES20.glBindTexture(GLES20.GL_TEXTURE_2D,0);
-
-        return OpenGLUtils.ON_DRAWN;
     }
 
     protected void onDrawArraysPre() {
@@ -143,8 +233,8 @@ public class GPUImageFilter {
         }
     }
 
-    public boolean isInitialzed(){
-        return mIsInitialzed;
+    public boolean isInitialized(){
+        return mIsInitialized;
     }
 
     protected void runOnDraw(final Runnable runnable){
@@ -185,5 +275,22 @@ public class GPUImageFilter {
         });
     }
 
+    /**
+     * 设置滤镜是否可用
+     * @param enable
+     */
+    public void setFilterEnable(boolean enable) {
+        mFilterEnable = enable;
+    }
+
+    /**
+     * 释放资源
+     */
+    public void release() {
+        if (mIsInitialized) {
+            GLES30.glDeleteProgram(mGLProgramId);
+        }
+        destroyFrameBuffer();
+    }
 
 }

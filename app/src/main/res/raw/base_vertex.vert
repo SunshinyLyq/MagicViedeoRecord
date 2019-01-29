@@ -1,4 +1,3 @@
-// 顶点着色器
 
 //顶点位置，需要传入4个点
 attribute vec4 vPosition;
