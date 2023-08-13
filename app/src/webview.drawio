@@ -1,9 +1,39 @@
-<mxfile host="app.diagrams.net" modified="2023-08-13T14:54:35.168Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" version="21.6.8" etag="_z9NUXxtvNAXJ8O73sgx" type="github">
+<mxfile host="app.diagrams.net" modified="2023-08-13T15:09:42.428Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36" etag="PgxAB_8dScXUOh6o8WdR" version="21.6.8" type="github">
   <diagram name="第 1 页" id="r3WhJgGqM_bAaVAQrt20">
-    <mxGraphModel>
+    <mxGraphModel dx="637" dy="653" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="hi8HvdBMCla10TESBJ24-1" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="160" y="100" width="300" height="410" as="geometry" />
+        </mxCell>
+        <mxCell id="hi8HvdBMCla10TESBJ24-3" value="" style="endArrow=classic;html=1;rounded=0;entryX=-0.013;entryY=0.149;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="24.03" y="160" as="sourcePoint" />
+            <mxPoint x="160.00000000000003" y="161.09000000000003" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="hi8HvdBMCla10TESBJ24-4" value="网页加载" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="270" y="100" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="hi8HvdBMCla10TESBJ24-5" value="用户请求" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="60" y="130" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hi8HvdBMCla10TESBJ24-9" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="hi8HvdBMCla10TESBJ24-6" target="hi8HvdBMCla10TESBJ24-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hi8HvdBMCla10TESBJ24-6" value="webview启动" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="140" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hi8HvdBMCla10TESBJ24-12" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="hi8HvdBMCla10TESBJ24-7" target="hi8HvdBMCla10TESBJ24-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="hi8HvdBMCla10TESBJ24-7" value="页面初始化" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="200" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="hi8HvdBMCla10TESBJ24-10" value="解析URL，设置背景色" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="210" y="260" width="200" height="30" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
